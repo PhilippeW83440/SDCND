@@ -24,6 +24,9 @@ The goals / steps of this project are the following:
 
 ###1. Pipeline description.
   
+Let's consider an example with an image extracted from the extra challenge.  
+Starting with this raw image, that has some curvature and shadows, let's follow up step by step the processing pipeline.  
+
 ![alt text][image1]  
   
 My pipeline consisted of following steps steps:  
