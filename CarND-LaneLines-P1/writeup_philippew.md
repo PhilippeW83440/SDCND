@@ -55,6 +55,7 @@ Note that lower kernel sizes values are more CPU friendly.
   
 **4. Canny Edges detection**  
 Existing function: canny  
+The Canny algorithm detects edges by looking at gradients: corresponding to pixel intensities changes.  
 Lower threshold used is 50 while higher threshold is 150.  
 We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 1:3).  
   
@@ -64,10 +65,10 @@ We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 
 Existing function: region_of_interest  
 A trapezoidal region corresponding to the lower part of the camera is delimited in a generic way.  
 By using ratio of image dimension.  
-bottom_left  = [cols*0.1, rows*0.99]  
-top_left     = [cols*0.4, rows*0.6]  
-bottom_right = [cols*0.9, rows*0.99]  
-top_right    = [cols*0.6, rows*0.6]   
+bottom_left  = [cols x 0.1, rows x 0.99]  
+top_left     = [cols x 0.4, rows x 0.6]  
+bottom_right = [cols x 0.9, rows x 0.99]  
+top_right    = [cols x 0.6, rows x 0.6]   
   
 ![alt text][image6]  
   
