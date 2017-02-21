@@ -32,7 +32,7 @@ Starting with this raw image, that has some curvature and shadows, let's follow 
   
 My pipeline consisted of following steps steps:  
   
-**1. Color selection** 
+**1. Color selection**  
 New Function: select_white_yellow  
 White and Yellow pixels are extracted in HLS space: cf https://en.wikipedia.org/wiki/HSL_and_HSV  
 White is identified with high L (Light) values: above 200.    
@@ -40,20 +40,20 @@ Yellow is identified with a H (Hue) value in between 10 and 40 and a S (Saturati
   
 ![alt text][image2]  
   
-**2. Grayscale**  
+**2. Grayscale**    
 Existing function: grayscale  
 Then the image is converted to grayscale which is more suitable for edges detection.  
   
 ![alt text][image3]  
   
-**3. Gaussian Blur** 
+**3. Gaussian Blur**   
 Existing function: gaussian_blur  
 Before performing edges detection, Gaussian Blur filter is applied with a kernel size of 15. 
 Note that lower kernel sizes values are more CPU friendly.  
   
 ![alt text][image4]  
   
-**4. Canny Edges detection**  
+**4. Canny Edges detection**    
 Existing function: canny  
 The Canny algorithm detects edges by looking at gradients: corresponding to pixel intensities changes.  
 Lower threshold used is 50 while higher threshold is 150.  
@@ -61,7 +61,7 @@ We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 
   
 ![alt text][image5]  
   
-**5. Region Of Interest**  
+**5. Region Of Interest**    
 Existing function: region_of_interest  
 A trapezoidal region corresponding to the lower part of the camera is delimited in a generic way.  
 By using ratio of image dimension.  
@@ -72,13 +72,13 @@ top_right    = [cols x 0.6, rows x 0.6]
   
 ![alt text][image6]  
   
-**6. Hough Lines detection** 
+**6. Hough Lines detection**   
 Existing function: hough_lines  
 Probabilistic Hough Line detection is being used (cv2.HoughLineP) with the folowing parameters:  
 rho=1, theta=np.pi/180, threshold=20, min_line_len=50, max_line_gap=300  
   
-**7. Left and Right line detection**  
-Existing function: draw_lines (with most of the modification being done here)  
+**7. Left and Right line detection**    
+Existing function: draw_lines (with most of the modifications being done here)  
 Thanks to houghLineP, opencv typically detects a few hundreds of lines more or less relevant to our purpose.  
 Our objective is to determine a best fit for the left and right lanes.  
 A single slope, intercept and length value is determined for left (negative slope) and right (positive slope) lanes.  
@@ -90,7 +90,7 @@ The key characteristics used are:
   
 Thanks to these 3 features the estimation of the lanes appears to be pretty accurate and stable on the images and videos provided for this project.  
   
-**8. Weighted image construction**  
+**8. Weighted image construction**    
 The estimated left and right lines are superimposed on the original image.  
   
 ![alt text][image7]  
