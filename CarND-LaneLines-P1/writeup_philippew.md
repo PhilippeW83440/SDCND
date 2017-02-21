@@ -85,6 +85,7 @@ The key characteristics used are:
 * a simple outliers rejection criteria is defined: a lane has to intersect with the bottom part of the image.  
 * a 1st order low pass filtering is applied for the values derived for the current frame (slope, intercept and line length):  
   * y[n] = alpha x[n] + (1 - alpha) y[n-1] with a default alpha value of 0.2  
+  
 Thanks to these 3 features the estimation of the lanes appears to be pretty accurate and stable on the images and videos provided for this project.  
   
 **8. Weighted image construction**  
