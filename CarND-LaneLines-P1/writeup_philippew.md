@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 [image4]: ./writeup_images/gaussian_blur.png "Gaussian Blur"
 [image5]: ./writeup_images/canny.png "Canny"
 [image6]: ./writeup_images/roi.png "Region Of Interest"
-[image7]: ./writeup_images/raw_with_detected_lane_lines.png "Raw with detected lane lines"
+[image7]: ./writeup_images/raw_with_lane_lines_detected.png "Raw with detected lane lines"
 
 
 ---
