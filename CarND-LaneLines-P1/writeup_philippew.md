@@ -16,6 +16,7 @@ The goals / steps of this project are the following:
 [image5]: ./writeup_images/canny.png "Canny"
 [image6]: ./writeup_images/roi.png "Region Of Interest"
 [image7]: ./writeup_images/raw_with_lane_lines_detected.png "Raw with detected lane lines"
+[image8]: ./writeup_images/extra.gif "Extra"
 
 
 ---
@@ -93,7 +94,10 @@ The estimated left and right lines are superimposed on the original image.
   
 ![alt text][image7]  
   
-
+And here is the result on the extra challenge:  
+  
+[extra.mp4](https://youtu.be/zExBAaFdJjQ)  
+    
 ###2. Identify potential shortcomings with your current pipeline
 
 
