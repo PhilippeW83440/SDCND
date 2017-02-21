@@ -9,14 +9,23 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/grayscale.jpg "Grayscale"
+[image1]: ./writeup_images/raw.png "Raw"
+[image2]: ./writeup_images/white_and_yellow.png "White and yellow"
+[image3]: ./writeup_images/grayscale.png "Grayscale"
+[image4]: ./writeup_images/gaussian_blur.png "Gaussian Blur"
+[image5]: ./writeup_images/canny.png "Canny"
+[image6]: ./writeup_images/roi.png "Region Of Interest"
+[image7]: ./writeup_images/raw_with_detected_lane_lines.png "Raw with detected lane lines"
+
 
 ---
 
 ### Reflection
 
 ###1. Pipeline description.
-
+  
+![alt text][image1]  
+  
 My pipeline consisted of following steps steps:  
   
 **1. Color selection** 
@@ -25,19 +34,27 @@ White and Yellow pixels are extracted in HLS space: cf https://en.wikipedia.org/
 White is identified with high L (Light) values: above 200.    
 Yellow is identified with a H (Hue) value in between 10 and 40 and a S (Saturation) value above 100.  
   
+![alt text][image2]  
+  
 **2. Grayscale**  
 Existing function: grayscale  
 Then the image is converted to grayscale which is more suitable for edges detection.  
+  
+![alt text][image3]  
   
 **3. Gaussian Blur** 
 Existing function: gaussian_blur  
 Before performing edges detection, Gaussian Blur filter is applied with a kernel size of 15. 
 Note that lower kernel sizes values are more CPU friendly.  
   
+![alt text][image4]  
+  
 **4. Canny Edges detection**  
 Existing function: canny  
 Lower threshold used is 50 while higher threshold is 150.  
 We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 1:3).  
+  
+![alt text][image5]  
   
 **5. Region Of Interest**  
 Existing function: region_of_interest  
@@ -47,6 +64,8 @@ bottom_left  = [cols*0.1, rows*0.99]
 top_left     = [cols*0.4, rows*0.6]  
 bottom_right = [cols*0.9, rows*0.99]  
 top_right    = [cols*0.6, rows*0.6]   
+  
+![alt text][image6]  
   
 **6. Hough Lines detection** 
 Existing function: hough_lines  
@@ -67,12 +86,9 @@ Thanks to these 3 features the estimation of the lanes appears to be pretty accu
   
 **8. Weighted image construction**  
 The estimated left and right lines are superimposed on the original image.  
-
-
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
-
-![alt text][image1]
-
+  
+![alt text][image7]  
+  
 
 ###2. Identify potential shortcomings with your current pipeline
 
@@ -82,4 +98,4 @@ The main shortcoming is that it is strictly dealing with lines. There is no esti
 
 ###3. Suggest possible improvements to your pipeline
 
-The way I implemented the 1st order low pass filtering could be cleaner: I am using global variable. It should be implement in an Object Oriented way.
+The way I implemented the 1st order low pass filtering could be cleaner: I am using global variable. It should be implement in an Object Oriented way with encapsulated variables.  
