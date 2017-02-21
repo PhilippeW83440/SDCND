@@ -102,8 +102,19 @@ And here is the result on the extra challenge:
 
 
 The main shortcoming is that it is strictly dealing with lines. There is no estimation of curvature.  
+Moreover, more conditions should be tested: by night, under rain, with roads going up and down ...  
+Also when the car is moving from a lane line to another.  
+Or when other cars just in front of us are moving from one lane line to the other.
 
 
 ###3. Suggest possible improvements to your pipeline
 
 The way I implemented the 1st order low pass filtering could be cleaner: I am using global variable. It should be implement in an Object Oriented way with encapsulated variables.  
+
+In terms of additional techniques:
+* curvature will be dealt by P4 advanced lane lines detection
+* More advanced filtering like Kalman filtering could be used
+* More advanced outliers rejection algorithms could be used: maybe like RANSAC algorithm
+* The ROI could be adapted depending on road orientation: car going up or down
+* One keypoint is related to realtime optimizations. This has not been investigated here (for example using smaller kernel sizes would diminish processing requirements)  
+
