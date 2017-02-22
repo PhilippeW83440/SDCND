@@ -34,6 +34,7 @@ My pipeline consisted of following steps steps:
   
 **1. Color selection**  
 New Function: select_white_yellow  
+Going from RGB colorspace to HSV or HLS colorspace helps dealing with poor lighting conditions. Even if not required when working on the 2 first videos (white.mp4 and yelow.mp4), the below technique, color selection in HLS space, results in a clear improvement for the extra.mp4 challenge video.  
 White and Yellow pixels are extracted in HLS space: cf https://en.wikipedia.org/wiki/HSL_and_HSV  
 White is identified with high L (Light) values: above 200.    
 Yellow is identified with a H (Hue) value in between 10 and 40 and a S (Saturation) value above 100.  
@@ -42,7 +43,7 @@ Yellow is identified with a H (Hue) value in between 10 and 40 and a S (Saturati
   
 **2. Grayscale**    
 Existing function: grayscale  
-Then the image is converted to grayscale which is more suitable for edges detection.  
+Then the image is converted to grayscale which is more suitable for edges detection. Canny edge detection will look at contrasts.    
   
 ![alt text][image3]  
   
@@ -50,7 +51,7 @@ Then the image is converted to grayscale which is more suitable for edges detect
 Existing function: gaussian_blur  
 Before performing edges detection, Gaussian Blur filter is applied with a kernel size of 15. 
 Note that lower kernel sizes values are more CPU friendly.  
-* kernel-size: in the Gaussian Filter will remove the noise leaving the most distinguishable parts. Must be an odd number (5, 7...)  
+* kernel-size: in the Gaussian Filter will remove the noise leaving the most distinguishable parts. Must be an odd number (5, 7...). Thanks to Gaussian Blurring, blurred effect or average effect, we make sure we are only focusing on strong contrasting boundaries.  
   
 ![alt text][image4]  
   
@@ -65,7 +66,7 @@ We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 
 **5. Region Of Interest**    
 Existing function: region_of_interest  
 A trapezoidal region corresponding to the lower part of the camera is delimited in a generic way.  
-By using ratio of image dimension.  
+By using ratio of image dimension. It is basiacally doing a crop.    
 bottom_left  = [cols x 0.1, rows x 0.99]  
 top_left     = [cols x 0.4, rows x 0.6]  
 bottom_right = [cols x 0.9, rows x 0.99]  
@@ -77,12 +78,13 @@ top_right    = [cols x 0.6, rows x 0.6]
 Existing function: hough_lines  
 Probabilistic Hough Line detection is being used (cv2.HoughLineP) with the folowing parameters:  
 rho=1, theta=np.pi/180, threshold=20, min_line_len=50, max_line_gap=300  
+HoughLineP is a voting system: rho and theta define the granularity of our 2D-grid (x-axis: the slope m and y-axis: the intercept b). Then we are counting per grid element. To be considered, a line i.e. a (m,b) pair, votes must be above threshold. Note that low rho and teta values provide higher resolution but at the cost of somewhat more processing.  
   
 * min_line_len: is the minimum length of a line (in pixels) that we will accept in the output.  
 * max_line_gap: is the maximum distance(in pixels) between segments that will be allowed to connect into a single line.  
 * Increasing min_line_len and max_line_gap (~100 and above) for Hough Transform will make lines longer and will have less number of breaks. This will make the solid annotated line longer in the output.  
 * Increasing max_line_gap will allow points that are farther away from each other to be connected with a single line.  
-* threshold: increasing(~50-60) aims to rule out spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
+* threshold: it is the minimum number of votes. Increasing(~50-60) aims to rule out spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
 * rho: value of 2 or 1 is recommended. It gives distance resolution in pixels of the Hough grid.  
 
   
@@ -100,7 +102,7 @@ The key characteristics used are:
 Thanks to these 3 features the estimation of the lanes appears to be pretty accurate and stable on the images and videos provided for this project.  
   
 **8. Weighted image construction**    
-The estimated left and right lines are superimposed on the original image.  
+The estimated left and right lines are overlayed on the original image.  
   
 ![alt text][image7]  
   
@@ -114,7 +116,7 @@ And here is the result on the extra challenge:
 The main shortcoming is that it is strictly dealing with lines. There is no estimation of curvature.  
 Moreover, more conditions should be tested: by night, under rain, with roads going up and down ...  
 Also when the car is moving from a lane line to another.  
-Or when other cars just in front of us are moving from one lane line to the other.
+Or when other cars just in front of us are moving from one lane line to the other. City conditions will create extra challenges.  
 
 
 ###3. Suggest possible improvements to your pipeline
