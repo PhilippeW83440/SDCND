@@ -50,6 +50,7 @@ Then the image is converted to grayscale which is more suitable for edges detect
 Existing function: gaussian_blur  
 Before performing edges detection, Gaussian Blur filter is applied with a kernel size of 15. 
 Note that lower kernel sizes values are more CPU friendly.  
+* kernel-size: in the Gaussian Filter will remove the noise leaving the most distinguishable parts. Must be an odd number (5, 7...)  
   
 ![alt text][image4]  
   
@@ -76,6 +77,14 @@ top_right    = [cols x 0.6, rows x 0.6]
 Existing function: hough_lines  
 Probabilistic Hough Line detection is being used (cv2.HoughLineP) with the folowing parameters:  
 rho=1, theta=np.pi/180, threshold=20, min_line_len=50, max_line_gap=300  
+  
+* min_line_len: is the minimum length of a line (in pixels) that we will accept in the output.  
+* max_line_gap: is the maximum distance(in pixels) between segments that will be allowed to connect into a single line.  
+* Increasing min_line_len and max_line_gap (~100 and above) for Hough Transform will make lines longer and will have less number of breaks. This will make the solid annotated line longer in the output.  
+* Increasing max_line_gap will allow points that are farther away from each other to be connected with a single line.  
+* threshold: increasing(~50-60) will rule out the spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
+* rho: value of 2 or 1 is recommended. It gives distance resolution in pixels of the Hough grid.  
+
   
 **7. Left and Right line detection**    
 Existing function: draw_lines (with most of the modifications being done here)  
@@ -118,4 +127,5 @@ In terms of additional techniques:
 * More advanced outliers rejection algorithms could be used: maybe like RANSAC algorithm
 * The ROI could be adapted depending on road orientation: car going up or down
 * One keypoint is related to realtime optimizations. This has not been investigated here (for example using smaller kernel sizes would diminish processing requirements)  
+* [Robust and real time detection of curvy lanes for driving assistance and autonomous vehicles](http://airccj.org/CSCP/vol5/csit53211.pdf) 
 
