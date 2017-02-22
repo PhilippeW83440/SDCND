@@ -51,7 +51,7 @@ Then the image is converted to grayscale which is more suitable for edges detect
 Existing function: gaussian_blur  
 Before performing edges detection, Gaussian Blur filter is applied with a kernel size of 15. 
 Note that lower kernel sizes values are more CPU friendly.  
-* kernel-size: in the Gaussian Filter will remove the noise leaving the most distinguishable parts. Must be an odd number (5, 7...). Thanks to Gaussian Blurring, blurred effect or average effect, we make sure we are only focusing on strong contrasting boundaries.  
+* kernel-size: the Gaussian Filter will remove the noise leaving the most distinguishable parts. Must be an odd number (5, 7...). Thanks to Gaussian Blurring, blurred effect or average effect, we make sure we are only focusing on strong contrasting boundaries.  
   
 ![alt text][image4]  
   
@@ -66,7 +66,7 @@ We have a ratio of 1:3 (recommendation from J. Canny is a ratio between 1:2 and 
 **5. Region Of Interest**    
 Existing function: region_of_interest  
 A trapezoidal region corresponding to the lower part of the camera is delimited in a generic way.  
-By using ratio of image dimension. It is basiacally doing a crop.    
+By using ratio of image dimension. It is basically doing a crop.    
 bottom_left  = [cols x 0.1, rows x 0.99]  
 top_left     = [cols x 0.4, rows x 0.6]  
 bottom_right = [cols x 0.9, rows x 0.99]  
@@ -82,9 +82,9 @@ HoughLineP is a voting system: rho and theta define the granularity of our 2D-gr
   
 * min_line_len: is the minimum length of a line (in pixels) that we will accept in the output.  
 * max_line_gap: is the maximum distance(in pixels) between segments that will be allowed to connect into a single line.  
-* Increasing min_line_len and max_line_gap (~100 and above) for Hough Transform will make lines longer and will have less number of breaks. This will make the solid annotated line longer in the output.  
+* Increasing min_line_len and max_line_gap for Hough Transform will make lines longer and will have less number of breaks. This will make the solid annotated line longer in the output.  
 * Increasing max_line_gap will allow points that are farther away from each other to be connected with a single line.  
-* threshold: it is the minimum number of votes. Increasing(~50-60) aims to rule out spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
+* threshold: it is the minimum number of votes. Increasing aims to rule out spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
 * rho: value of 2 or 1 is recommended. It gives distance resolution in pixels of the Hough grid.  
 
   
