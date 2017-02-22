@@ -82,7 +82,7 @@ rho=1, theta=np.pi/180, threshold=20, min_line_len=50, max_line_gap=300
 * max_line_gap: is the maximum distance(in pixels) between segments that will be allowed to connect into a single line.  
 * Increasing min_line_len and max_line_gap (~100 and above) for Hough Transform will make lines longer and will have less number of breaks. This will make the solid annotated line longer in the output.  
 * Increasing max_line_gap will allow points that are farther away from each other to be connected with a single line.  
-* threshold: increasing(~50-60) will rule out the spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
+* threshold: increasing(~50-60) aims to rule out spurious lines. It defines the minimum number of intersections in a given grid cell that are required to choose a line.  
 * rho: value of 2 or 1 is recommended. It gives distance resolution in pixels of the Hough grid.  
 
   
