@@ -78,7 +78,7 @@ top_right    = [cols x 0.6, rows x 0.6]
 Existing function: hough_lines  
 Probabilistic Hough Line detection is being used (cv2.HoughLineP) with the folowing parameters:  
 rho=1, theta=np.pi/180, threshold=20, min_line_len=50, max_line_gap=300  
-HoughLineP is a voting system: rho and theta define the granularity of our 2D-grid (x-axis: the slope m and y-axis: the intercept b). Then we are counting per grid element. To be considered, a line i.e. a (m,b) pair, votes must be above threshold. Note that low rho and teta values provide higher resolution but at the cost of somewhat more processing.  
+HoughLineP is a voting system: rho and theta define the granularity of our 2D-grid (x-axis: the slope m and y-axis: the intercept b). Then we are counting per grid elements. For a line i.e. a (m,b) pair to be detected, votes must be above the specified threshold. Note that low rho and teta values provide higher resolution but at the cost of somewhat more processing.  
   
 * min_line_len: is the minimum length of a line (in pixels) that we will accept in the output.  
 * max_line_gap: is the maximum distance(in pixels) between segments that will be allowed to connect into a single line.  
