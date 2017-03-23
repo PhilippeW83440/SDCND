@@ -58,9 +58,10 @@ signs data set:
 The code for this step is contained in the third code cell of the IPython notebook.  
 
 Here is an exploratory visualization of the data set.   
-It is a bar chart showing how the data is actually unbalanced: some classes:
+It is a bar chart showing how the data is actually unbalanced:  
 - 17 classes have more than 1000 training samples, whith peaks at 2000 training samples.
 - 19 classes have less than 500 training samples  
+  
 Ideally we would like to have the training, validation and test sets to be well balanced. So typically this could be a topic for data augmentation to make sure we are dealing with balanced classes.
 
 ![alt text][image1]
@@ -75,21 +76,24 @@ I am using a per image normalization: per image and per channel, I am computing 
 I am not converting the images to grayscale: which could have the benefit of faster training times. I tried but got slightly better results with colored images and as the training is pretty fast (around 10 minutes with a GPU 980 TI card), I am sticking to colored images. I have also tried histogram equalization but as per my experiments so far, the key point was doing a **per image normalization**.  
 
 
-As a first step, I decided to convert the images to grayscale because ...
-
 Here is an example of a traffic sign image before and after grayscaling.
 
 ![alt text][image2]
 
-As a last step, I normalized the image data because ...
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
 The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
-To cross validate my model, I randomly split the training data into a training set and validation set. I did this by ...
+During training, a bit more than 10% of data is being used for cross-validation.  
+The cross-validation accuracy is used as a trigger for storing the best performing model. So typically the training lasts 50 epochs, but a new model is being stored and qualified only when cross-validation accuracy is improved.  
+At the beginning of every epoch the training set is shuffled: this is very important.
 
-My final training set had X number of images. My validation set and test set had Y and Z number of images.
+Also I am using one form of data augmentation: at every epoch I have the ability to derive from the training set a companion training set with modified images. The perturbations used are geometric: rotations, translation, scaling and perspective transforms. So actually the training set is 2x the original training set, with 50% of the samples, the augmented ones, being geometric transformations of the original ones. 
+My best performing model, is make a perturbated copy of the original training set and using this perturbated copy during 8 epochs, before generating a new perturbated copy. And so on during training.  
+This enabled me to get a Validation Accuracy above 99% (while I was at 98% without such, simple and limited data augmenation).  
+I have also noticed that this improved the ability to generalize better and improved results with random traffic sign images retrieved on the web.  
+
 
 The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
 
