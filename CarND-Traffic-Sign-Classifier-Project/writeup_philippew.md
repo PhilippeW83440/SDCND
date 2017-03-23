@@ -251,7 +251,11 @@ The image 6 is not recognised: the traffic sign elected is nevertheless a traffi
 | 1.00				    | Priority Road     							|
 | 0.41			    | Speed limit (60km/h)      							|
 
-![alt text][prediction1] ![alt text][prediction2] ![alt text][prediction3] 
-![alt text][prediction4] ![alt text][prediction5] ![alt text][prediction6]
 
+!<img src="./examples/prediction1.png" alt="alt text" width="400" height="300">
+!<img src="./examples/prediction2.png" alt="alt text" width="400" height="300">
+!<img src="./examples/prediction3.png" alt="alt text" width="400" height="300">
+!<img src="./examples/prediction4.png" alt="alt text" width="400" height="300">
+!<img src="./examples/prediction5.png" alt="alt text" width="400" height="300">
+!<img src="./examples/prediction6.png" alt="alt text" width="400" height="300">
 
