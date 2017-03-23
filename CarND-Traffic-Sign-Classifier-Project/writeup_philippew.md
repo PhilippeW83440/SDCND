@@ -86,10 +86,10 @@ Here is an example of a traffic sign image before and after grayscaling.
 The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
 During training, a bit more than 10% of data is being used for cross-validation.  
-The cross-validation accuracy is used as a trigger for storing the best performing model. So typically the training lasts 50 epochs, but a new model is being stored and qualified only when cross-validation accuracy is improved.  
+The cross-validation accuracy is used as a trigger for storing the best performing model. So typically the training lasts 50 epochs, but **a new model is being stored and qualified only when cross-validation accuracy is improved**.  
 At the beginning of every epoch the training set is shuffled: this is very important.
 
-Also I am using one form of data augmentation: at every epoch I have the ability to derive from the training set a companion training set with modified images. The perturbations used are geometric: rotations, translation, scaling and perspective transforms. So actually the training set is 2x the original training set, with 50% of the samples, the augmented ones, being geometric transformations of the original ones. 
+Also I am using one form of data augmentation: at every epoch I have the ability to derive from the training set a companion training set with modified images. The perturbations used are geometric: rotations, translation, scaling and perspective transforms. So actually **the training set is 2x the original training set, with 50% of the samples, the augmented ones, being geometric transformations of the original ones**. 
 My best performing model, is make a perturbated copy of the original training set and using this perturbated copy during 8 epochs, before generating a new perturbated copy. And so on during training.  
 This enabled me to get a Validation Accuracy above 99% (while I was at 98% without such, simple and limited data augmenation).  
 I have also noticed that this improved the ability to generalize better and improved results with random traffic sign images retrieved on the web.  
@@ -110,18 +110,36 @@ The code for my final model is located in the seventh cell of the ipython notebo
 
 My final model consisted of the following layers:
 
+The starting point was the LeNet model that was improved by:
+- adding droput after the non-linearities (RELU) of the fully connected layers. This is a regularization feature to prevent overfitting and enable better generalization.  
+- increasing the number of convolution filters: I started with 6 and 16 and gradualy multiplied by 2 as long as I got accuracy imporvements. Good choices are (48 filters for conv1 and 128 filters for conv2)
+- I changed the random initialization of the weights by using a smaller standard deviation and it realy helped improved the accuracy. Weights initialization is a key point when dealing with Neural Networks.
+
+The things I have tried and finally rejected were:
+- Batch normalization before the relu non linearities. No improvement. Maybe because the per image mean var normalization is already providing benefits and the network here is relativelly small.  
+
+I have not considered adding a 3rd convolutional layer as the input here is small 32x32 and the size out of the 2nd convolution layer is already down to 5x5. I think much more convolutional layers would make a lot of sense with bigger input images.   
+
+The things I would like to try further:
+- using DenseNet or  multi-scale features, which means that convolutional layers’ output is not only forwarded into subsequent layer, but is also branched off and fed together into the first fully connected layer. My first trials were not successful but  with more data augmentation and deeper network this could or should help.  
+
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Convolution 5x5     	| 48 filters: 1x1 stride, valid padding, outputs 28x28x48 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
- 
+| Max pooling	      	| 2x2 stride,  outputs 14x14x48 				|
+| Convolution 5x5     	| 128 filters: 1x1 stride, valid padding, outputs 10x10x128 	|  
+| RELU					|	non linearities											|  
+| Max pooling	      	| 2x2 stride,  outputs 5x5x128 	|  
+| Flatten | the 3D shape (feature maps) into a flat vector |
+| Fully connected		| 120 neurons        									|  
+| RELU					|	non linearities											|  
+| DROPOUT					|	50% drop during training											|  
+| Fully connected		| 84 neurons        									|  
+| RELU					|												|
+| DROPOUT					|	50% drop during training											|
+| Softmax				| 43 classes       									|
 
 
 ####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
