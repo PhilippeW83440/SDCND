@@ -117,6 +117,7 @@ The starting point was the LeNet model that was improved by:
 
 The things I have tried and finally rejected were:
 - Batch normalization before the relu non linearities. No improvement. Maybe because the per image mean var normalization is already providing benefits and the network here is relativelly small.  
+- increasing the size of the fully connected layers: it had almost no impact.  
 
 I have not considered adding a 3rd convolutional layer as the input here is small 32x32 and the size out of the 2nd convolution layer is already down to 5x5. I think much more convolutional layers would make a lot of sense with bigger input images.   
 
@@ -127,7 +128,7 @@ The things I would like to try further:
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x3 RGB image   							| 
 | Convolution 5x5     	| 48 filters: 1x1 stride, valid padding, outputs 28x28x48 	|
-| RELU					|												|
+| RELU					|	non linearities											|
 | Max pooling	      	| 2x2 stride,  outputs 14x14x48 				|
 | Convolution 5x5     	| 128 filters: 1x1 stride, valid padding, outputs 10x10x128 	|  
 | RELU					|	non linearities											|  
@@ -137,7 +138,7 @@ The things I would like to try further:
 | RELU					|	non linearities											|  
 | DROPOUT					|	50% drop during training											|  
 | Fully connected		| 84 neurons        									|  
-| RELU					|												|
+| RELU					|	non linearities											|
 | DROPOUT					|	50% drop during training											|
 | Softmax				| 43 classes       									|
 
@@ -146,28 +147,41 @@ The things I would like to try further:
 
 The code for training the model is located in the eigth cell of the ipython notebook. 
 
-To train the model, I used an ....
+I have used 50 epochs and a Batch Size of 128. With around 70.000 trainig samples and by using a local Nvidia GPU GTX 980 TI it makes the training pretty fast (around 10 minutes). I varied the Batch Size without major accuracy changes.  
+
+I am using the Adam Optimizer with a Learning Rate of 1e-3. Compared to default SGD training with momentum, it reduces the number of hyperparameters to train and you do not have to manually tune the Learning Rate decay strategy. So it is easier and less time consuming to use with results that should be very good. 
+
+I implemented and tested L2 regularization but it did not help; most probably because the dropouts are already doing a good job in terms of regularization.  
+
 
 ####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of: 100%
+* validation set accuracy of: 99.1%
+* test set accuracy of: 97.4%
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+I have used an iterative approach starting with the LeNet architecture provided by the class as a starting point.
+The validation accuracy was 89%.  
+So I managed to improve up to and above 99%.  
+I have described my different iterations and trials in the previous sections but maybe to summarize the key points and improvements I got:
+* use different weights initializations: lower the sigma value.
+* use dropouts: for regularization
+* use more convolutional filters: for better discrimination capabilities. It improves translational invariance which is important when trying to detect an object in an image.
+* use per image mean var normalization. The per image being important here.
+* use some reduced and simple augmentation with geometric transformations (traing set size: 2x)
+* only qualify and store a model when the validation accuracy improves (it is related to early stop as well to prevent over fitting)
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+So at the end, it is an improved LeNet architecture. So a relativelly small network. And I ended with pretty good results: Validation Accuracy above 99% and Test Accuracy above 97%.
+
+Nevertheless to improve further I think 2 main things should be considered:
+- much more data augmentation: something like training set 20x. Also using color jittering on top of geometric transformations. 
+- more data would enable training of much more complex models. DenseNet and multi-scale features like in the Sermanet paper should be investigated.  
+A Test Accuracy above 99% should be feasible (but with much bigger training times as well).  
+So far the results are pretty good with fast training.
+
  
 
 ###Test a Model on New Images
