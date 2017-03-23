@@ -19,8 +19,8 @@ Training Set accuracy = 100%, Validation Set accuracy = 99.1%, Test Set accuracy
 [//]: # (Image References)
 
 [classes]: ./examples/unbalanced_classes.png "Visualization of unbalanced classes"
-[before]: ./examples/before_geometric_transform.jpg "Before geometric transform"
-[after]: ./examples/after_geometric_transform.jpg "After geometric transform"
+[before]: ./examples/before_geometric_transform.png "Before geometric transform"
+[after]: ./examples/after_geometric_transform.png "After geometric transform"
 [img1]: ./examples/img1.jpeg "Traffic Sign 1"
 [img2]: ./examples/img2.jpeg "Traffic Sign 2"
 [img3]: ./examples/img3.jpeg "Traffic Sign 3"
@@ -28,11 +28,11 @@ Training Set accuracy = 100%, Validation Set accuracy = 99.1%, Test Set accuracy
 [img5]: ./examples/img5.jpeg "Traffic Sign 5"
 [img6]: ./examples/img6.jpeg "Traffic Sign 6"
 [prediction1]: ./examples/prediction1.png "Prediction for img1"
-[prediction2]: ./examples/prediction1.png "Prediction for img2"
-[prediction3]: ./examples/prediction1.png "Prediction for img3"
-[prediction4]: ./examples/prediction1.png "Prediction for img4"
-[prediction5]: ./examples/prediction1.png "Prediction for img5"
-[prediction6]: ./examples/prediction1.png "Prediction for img6"
+[prediction2]: ./examples/prediction2.png "Prediction for img2"
+[prediction3]: ./examples/prediction3.png "Prediction for img3"
+[prediction4]: ./examples/prediction4.png "Prediction for img4"
+[prediction5]: ./examples/prediction5.png "Prediction for img5"
+[prediction6]: ./examples/prediction6.png "Prediction for img6"
 
 
 
@@ -72,7 +72,7 @@ It is a bar chart showing how the data is actually unbalanced:
   
 Ideally we would like to have the training, validation and test sets to be well balanced. So typically this could be a topic for data augmentation to make sure we are dealing with balanced classes.
 
-![alt text][classes]
+![minipic][classes] <!-- .element height="25%" width="25%" -->
 
 ###Design and Test a Model Architecture
 
@@ -100,10 +100,10 @@ I have also noticed that this improved the ability to generalize better and impr
 
 The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
 
-Here is an example of an original image and an augmented image:
+Here is an example of an original image and an augmented, with geometric transform, image:
 
-![alt text][before]
-![alt text][after]
+![Before][before]
+![After][after]
 
 
 
