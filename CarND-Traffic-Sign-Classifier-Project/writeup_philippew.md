@@ -86,7 +86,7 @@ I am not converting the images to grayscale: which could have the benefit of fas
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
-The code for dealing with the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
+The code dealing with the data, training and validation sets, is contained in the fifth code cell of the IPython notebook.  
 
 During training, a bit more than 10% of data is being used for cross-validation.  
 The cross-validation accuracy is used as a trigger for storing the best performing model. So typically the training lasts 50 epochs, but **a new model is being stored and qualified only when cross-validation accuracy is improved**.  
@@ -98,7 +98,7 @@ My best performing model is making a perturbated copy of the original training s
 I have also noticed that this improved the ability to generalize better and improved results with random traffic sign images retrieved on the web.  
 
 
-The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
+The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data to improve accuracy and enable the model to better generalize. To add more data to the the data set, I used techniques related to geometric transformations: rotations, scaling, translations and perspective transforms. 
 
 Here is an example of an original image and an augmented, with geometric transform, image:
 
@@ -110,8 +110,6 @@ Here is an example of an original image and an augmented, with geometric transfo
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
 The code for my final model is located in the seventh cell of the ipython notebook. 
-
-My final model consisted of the following layers:
 
 The starting point was the LeNet model that was improved by:
 - adding droput after the non-linearities (RELU) of the fully connected layers. This is a regularization feature to prevent overfitting and enable better generalization.  
