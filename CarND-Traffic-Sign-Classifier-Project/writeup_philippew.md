@@ -13,6 +13,8 @@ The goals / steps of this project are the following:
 * Analyze the softmax probabilities of the new images
 * Summarize the results with a written report
 
+**Main result and current status:   
+Training Set accuracy = 100%, Validation Set accuracy = 99.1%, Test Set accuracy = 97.4%**
 
 [//]: # (Image References)
 
@@ -35,7 +37,7 @@ The goals / steps of this project are the following:
 
 You're reading it! and here is a link to my [project code](https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb)
 
-###Data Set Summary & Exploration
+**Data Set Summary & Exploration**
 
 ####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
@@ -80,15 +82,15 @@ Here is an example of a traffic sign image before and after grayscaling.
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
-The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
+The code for dealing with the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
 During training, a bit more than 10% of data is being used for cross-validation.  
 The cross-validation accuracy is used as a trigger for storing the best performing model. So typically the training lasts 50 epochs, but **a new model is being stored and qualified only when cross-validation accuracy is improved**.  
 At the beginning of every epoch the training set is shuffled: this is very important.
 
 Also I am using one form of data augmentation: at every epoch I have the ability to derive from the training set a companion training set with modified images. The perturbations used are geometric: rotations, translation, scaling and perspective transforms. So actually **the training set is 2x the original training set, with 50% of the samples, the augmented ones, being geometric transformations of the original ones**. 
-My best performing model, is make a perturbated copy of the original training set and using this perturbated copy during 8 epochs, before generating a new perturbated copy. And so on during training.  
-This enabled me to get a Validation Accuracy above 99% (while I was at 98% without such, simple and limited data augmenation).  
+My best performing model is making a perturbated copy of the original training set and using this perturbated copy during 8 epochs, before generating a new perturbated copy. And so on during training.  
+**This enabled me to get a Validation Accuracy above 99% (while I was at 98% without such, simple and limited data augmenation).**  
 I have also noticed that this improved the ability to generalize better and improved results with random traffic sign images retrieved on the web.  
 
 
@@ -160,10 +162,12 @@ My final model results were:
 * validation set accuracy of: 99.1%
 * test set accuracy of: 97.4%
 
-I have used an iterative approach starting with the LeNet architecture provided by the class as a starting point.
-The validation accuracy was 89%.  
-So I managed to improve up to and above 99%.  
-I have described my different iterations and trials in the previous sections but maybe to summarize the key points and improvements I got:
+  Actually while testing I got at some point Validation Accuracy 99.3% and Test Accuracy 97.8%. But what I am submitting here corresponds to the resuls summarized above.  
+
+**I have used an iterative approach starting with the LeNet architecture provided by the Udacity class as a starting point.
+The validation accuracy was 89%.  So I managed to improve up to and above 99%.**    
+
+**I have described my different iterations and trials in the previous sections but here is the summary of the key points leading to improvements compared to LeNet baseline:**
 * use different weights initializations: lower the sigma value.
 * use dropouts: for regularization
 * use more convolutional filters: for better discrimination capabilities. It improves translational invariance which is important when trying to detect an object in an image.
@@ -174,10 +178,10 @@ I have described my different iterations and trials in the previous sections but
 So at the end, it is an improved LeNet architecture. So a relativelly small network. And I ended with pretty good results: Validation Accuracy above 99% and Test Accuracy above 97%.
 
 Nevertheless to improve further I think 2 main things should be considered:
-- much more data augmentation: something like training set 20x. Also using color jittering on top of geometric transformations. 
+- much more data augmentation: something like training set 20x. Also using color jittering on top of geometric transformations.
+- dealing with balanced training classes
 - more data would enable training of much more complex models. DenseNet and multi-scale features like in the Sermanet paper should be investigated.  
-A Test Accuracy above 99% should be feasible (but with much bigger training times as well).  
-So far the results are pretty good with fast training.
+A Test Accuracy above 99% should be feasible: but with much more training data and so bigger training times as well. 
 
  
 
@@ -191,7 +195,7 @@ Here are six German traffic signs that I found on the web:
 ![alt text][image7] ![alt text][image8]
 
 Images 1, 2 and 5 should be the easiest to classify.
-Images 4 and 6 shopuld be difficult to classify: not cropped at all actually.
+Images 4 and 6 should be difficult to classify: not cropped at all actually.
 
 
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
