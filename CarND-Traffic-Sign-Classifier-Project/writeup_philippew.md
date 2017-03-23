@@ -1,8 +1,5 @@
 #**Traffic Sign Recognition** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
 
@@ -36,7 +33,7 @@ The goals / steps of this project are the following:
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb)
 
 ###Data Set Summary & Exploration
 
@@ -188,12 +185,14 @@ So far the results are pretty good with fast training.
 
 ####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are six German traffic signs that I found on the web:
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
-The first image might be difficult to classify because ...
+Images 1, 2 and 5 should be the easiest to classify.
+Images 4 and 6 shopuld be difficult to classify: not cropped at all actually.
+
 
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -203,28 +202,42 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Right-of-way at the next intersection     		| Right-of-way at the next intersection 									| 
+| Stop   			| Stop										|
+| Speed limit (60km/h)				| Speed limit (60km/h)										|
+| General caution	      		| General caution				 				|
+| Priority Road			| Priority Road      							|
+| End of all speed and passing limits			| Speed limit (60km/h)     							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 5 of the 6 traffic signs, which gives an accuracy of 83.3% (with just 6 images)  
+The accuracy on the test set used previously  is 97.4%  (with more than 12.000 images)
+
+Now of course, the analysis of these 6 images is just illustrative: we would need much more images to draw aconclusion. Also in a full real pipeline, we would first deal with a detection stage, detecting traffic signs and dealing with appropriate cropping before feeding the Traffic Sign Classifier.
+
+
 
 ####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+
+For images 1,2,3 and 5, the softmax probability is close to 1: so the model has a very high confidence in these predictions.
+Which is good: even if the images are clean, it is good to notice that the confidence is so high.
+For image 4: the caution sign, it is a difficult one as the image is not cropped at all but nevertheless the softmax probability for this class is clearly the highest (close to 0.5) while the competing ones, ranking 2 and  3, are below 0.1.
+Note that while training without data augmentation (with geometric transformations), this image was not correctly predicted. So here we benefit from this training with additional transformed data.
+The image 6 is not recognised: the traffic sign elected is nevertheless a traffic sign that has some similarity in terms of shape.
+
+
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 1.00         			| Right-of-way at the next intersection  									| 
+| 0.99     				| Stop 										|
+| 1.00					| Speed limit (60km/h)										|
+| 0.48      			| General caution					 				|
+| 1.00				    | Priority Road     							|
+| 0.41			    | Speed limit (60km/h)      							|
 
 
-For the second image ... 
+
