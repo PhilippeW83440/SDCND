@@ -44,19 +44,24 @@ You're reading it! and here is a link to my [project code](https://github.com/ud
 
 The code for this step is contained in the second code cell of the IPython notebook.  
 
-I used the pandas library to calculate summary statistics of the traffic
+I used the numpy and pandas library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+* The size of training set is: 34799  
+* The size of validation set is: 4410 (a bit more than 10% of the data used during training for cross-validation) 
+* The size of test set is: 12630
+* The shape of a traffic sign image is: 32x32x3 (3 RGB channels)
+* The number of unique classes/labels in the data set is: 43
 
 ####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
 The code for this step is contained in the third code cell of the IPython notebook.  
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set.   
+It is a bar chart showing how the data is actually unbalanced: some classes:
+- 17 classes have more than 1000 training samples, whith peaks at 2000 training samples.
+- 19 classes have less than 500 training samples  
+Ideally we would like to have the training, validation and test sets to be well balanced. So typically this could be a topic for data augmentation to make sure we are dealing with balanced classes.
 
 ![alt text][image1]
 
@@ -65,6 +70,10 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 ####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
 The code for this step is contained in the fourth code cell of the IPython notebook.
+
+I am using a per image normalization: per image and per channel, I am computing the mean and standard deviation and changing pixels value to (x - mu) / stddev. Using a per image normalization rather than a global normalization like (x - 128) / 128 type of normalization (assuming all pixels are in a [0, 255] range of values) enabled to improve results significantly.  
+I am not converting the images to grayscale: which could have the benefit of faster training times. I tried but got slightly better results with colored images and as the training is pretty fast (around 10 minutes with a GPU 980 TI card), I am sticking to colored images. I have also tried histogram equalization but as per my experiments so far, the key point was doing a **per image normalization**.  
+
 
 As a first step, I decided to convert the images to grayscale because ...
 
