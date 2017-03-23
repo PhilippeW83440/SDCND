@@ -18,14 +18,23 @@ Training Set accuracy = 100%, Validation Set accuracy = 99.1%, Test Set accuracy
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[classes]: ./examples/unbalanced_classes.png "Visualization of unbalanced classes"
+[before]: ./examples/before_geometric_transform.jpg "Before geometric transform"
+[after]: ./examples/after_geometric_transform.jpg "After geometric transform"
+[img1]: ./examples/img1.jpeg "Traffic Sign 1"
+[img2]: ./examples/img2.jpeg "Traffic Sign 2"
+[img3]: ./examples/img3.jpeg "Traffic Sign 3"
+[img4]: ./examples/img4.jpeg "Traffic Sign 4"
+[img5]: ./examples/img5.jpeg "Traffic Sign 5"
+[img6]: ./examples/img6.jpeg "Traffic Sign 6"
+[prediction1]: ./examples/prediction1.png "Prediction for img1"
+[prediction2]: ./examples/prediction1.png "Prediction for img2"
+[prediction3]: ./examples/prediction1.png "Prediction for img3"
+[prediction4]: ./examples/prediction1.png "Prediction for img4"
+[prediction5]: ./examples/prediction1.png "Prediction for img5"
+[prediction6]: ./examples/prediction1.png "Prediction for img6"
+
+
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -63,7 +72,7 @@ It is a bar chart showing how the data is actually unbalanced:
   
 Ideally we would like to have the training, validation and test sets to be well balanced. So typically this could be a topic for data augmentation to make sure we are dealing with balanced classes.
 
-![alt text][image1]
+![alt text][classes]
 
 ###Design and Test a Model Architecture
 
@@ -73,11 +82,6 @@ The code for this step is contained in the fourth code cell of the IPython noteb
 
 I am using a per image normalization: per image and per channel, I am computing the mean and standard deviation and changing pixels value to (x - mu) / stddev. Using a per image normalization rather than a global normalization like (x - 128) / 128 type of normalization (assuming all pixels are in a [0, 255] range of values) enabled to improve results significantly.  
 I am not converting the images to grayscale: which could have the benefit of faster training times. I tried but got slightly better results with colored images and as the training is pretty fast (around 10 minutes with a GPU 980 TI card), I am sticking to colored images. I have also tried histogram equalization but as per my experiments so far, the key point was doing a **per image normalization**.  
-
-
-Here is an example of a traffic sign image before and after grayscaling.
-
-![alt text][image2]
 
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
@@ -98,9 +102,9 @@ The sixth code cell of the IPython notebook contains the code for augmenting the
 
 Here is an example of an original image and an augmented image:
 
-![alt text][image3]
+![alt text][before]
+![alt text][after]
 
-The difference between the original data set and the augmented data set is the following ... 
 
 
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
@@ -191,8 +195,8 @@ A Test Accuracy above 99% should be feasible: but with much more training data a
 
 Here are six German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][img1] ![alt text][img2] ![alt text][img3] 
+![alt text][img4] ![alt text][img5] ![alt text][img6]
 
 Images 1, 2 and 5 should be the easiest to classify.
 Images 4 and 6 should be difficult to classify: not cropped at all actually.
@@ -243,5 +247,7 @@ The image 6 is not recognised: the traffic sign elected is nevertheless a traffi
 | 1.00				    | Priority Road     							|
 | 0.41			    | Speed limit (60km/h)      							|
 
+![alt text][prediction1] ![alt text][prediction2] ![alt text][prediction3] 
+![alt text][prediction4] ![alt text][prediction5] ![alt text][prediction6]
 
 
