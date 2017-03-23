@@ -72,7 +72,7 @@ It is a bar chart showing how the data is actually unbalanced:
   
 Ideally we would like to have the training, validation and test sets to be well balanced. So typically this could be a topic for data augmentation to make sure we are dealing with balanced classes.
 
-![minipic][classes] <!-- .element height="25%" width="25%" -->
+<img src="./examples/unbalanced_classes.png" alt="alt text" width="1000" height="500">
 
 ###Design and Test a Model Architecture
 
@@ -195,8 +195,12 @@ A Test Accuracy above 99% should be feasible: but with much more training data a
 
 Here are six German traffic signs that I found on the web:
 
-![alt text][img1] ![alt text][img2] ![alt text][img3] 
-![alt text][img4] ![alt text][img5] ![alt text][img6]
+!<img src="./examples/img1.jpeg" alt="alt text" width="100" height="100">
+!<img src="./examples/img2.jpeg" alt="alt text" width="100" height="100">
+!<img src="./examples/img3.jpeg" alt="alt text" width="100" height="100">
+!<img src="./examples/img4.jpeg" alt="alt text" width="100" height="100">
+!<img src="./examples/img5.jpeg" alt="alt text" width="100" height="100">
+!<img src="./examples/img6.jpeg" alt="alt text" width="100" height="100">
 
 Images 1, 2 and 5 should be the easiest to classify.
 Images 4 and 6 should be difficult to classify: not cropped at all actually.
