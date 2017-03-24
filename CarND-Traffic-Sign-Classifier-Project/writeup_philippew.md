@@ -16,10 +16,11 @@ The goals / steps of this project are the following:
 **Submitted, passed 23 March 2017 with:   
 Training Set accuracy = 100%, Validation Set accuracy = 99%,   Test Set accuracy = 97.5%**
 
-**Update 24 March 2017: 
+**Update 24 March 2017:   
 Training Set accuracy = 100%, Validation Set accuracy = 99.5%, Test Set accuracy = 97.8%**
 
-(cf https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb)  
+code at:    
+https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb  
 
 
 [//]: # (Image References)
