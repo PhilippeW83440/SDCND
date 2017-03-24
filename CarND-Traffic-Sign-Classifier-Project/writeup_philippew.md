@@ -163,8 +163,8 @@ My final model results were:
 * training set accuracy of: 100%
 * validation set accuracy of: 99%
 * test set accuracy of: 97.5%
-
-  Actually while testing I got at some point Validation Accuracy 99.3% and Test Accuracy 97.8%. But what I am submitting here corresponds to the resuls summarized above.  
+  
+Actually while testing I got at some point Validation Accuracy 99.3% and Test Accuracy 97.8%. But what I am submitting here corresponds to the resuls summarized above.  
 
 **I have used an iterative approach starting with the LeNet architecture provided by the Udacity class as a starting point.
 The validation accuracy was 89%.  So I managed to improve up to and above 99%.**    
@@ -185,6 +185,7 @@ Nevertheless to improve further I think 2 main things should be considered:
 - much more data augmentation: something like training set 20x. Also using color jittering on top of geometric transformations.
 - dealing with balanced training classes
 - more data would enable training of much more complex models. DenseNet and multi-scale features like in the Sermanet paper should be investigated.  
+
 A Test Accuracy above 99% should be feasible: but with much more training data and so bigger training times as well. 
 
  
