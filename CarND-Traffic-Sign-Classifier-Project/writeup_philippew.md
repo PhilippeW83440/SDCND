@@ -13,8 +13,15 @@ The goals / steps of this project are the following:
 * Analyze the softmax probabilities of the new images
 * Summarize the results with a written report
 
-**Main result and current status:   
-Training Set accuracy = 100%, Validation Set accuracy = 99%, Test Set accuracy = 97.5%**
+**Submitted, passed 23 March 2017 with:   
+Training Set accuracy = 100%, Validation Set accuracy = 99%,   Test Set accuracy = 97.5%**
+
+**Update 24 March 2017:   
+Training Set accuracy = 100%, Validation Set accuracy = 99.5%, Test Set accuracy = 97.8%**
+
+code at:    
+https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb  
+
 
 [//]: # (Image References)
 
