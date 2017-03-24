@@ -14,7 +14,7 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 **Main result and current status:   
-Training Set accuracy = 100%, Validation Set accuracy = 99.1%, Test Set accuracy = 97.4%**
+Training Set accuracy = 100%, Validation Set accuracy = 99%, Test Set accuracy = 97.5%**
 
 [//]: # (Image References)
 
@@ -114,11 +114,11 @@ The code for my final model is located in the seventh cell of the ipython notebo
 The starting point was the LeNet model that was improved by:
 - adding droput after the non-linearities (RELU) of the fully connected layers. This is a regularization feature to prevent overfitting and enable better generalization.  
 - increasing the number of convolution filters: I started with 6 and 16 and gradualy multiplied by 2 as long as I got accuracy imporvements. Good choices are (48 filters for conv1 and 128 filters for conv2)
+- increasing the size of the fully connected layers. 
 - I changed the random initialization of the weights by using a smaller standard deviation and it realy helped improved the accuracy. Weights initialization is a key point when dealing with Neural Networks.
 
 The things I have tried and finally rejected were:
 - Batch normalization before the relu non linearities. No improvement. Maybe because the per image mean var normalization is already providing benefits and the network here is relativelly small.  
-- increasing the size of the fully connected layers: it had almost no impact.  
 
 I have not considered adding a 3rd convolutional layer as the input here is small 32x32 and the size out of the 2nd convolution layer is already down to 5x5. I think much more convolutional layers would make a lot of sense with bigger input images.   
 
@@ -135,7 +135,7 @@ The things I would like to try further:
 | RELU					|	non linearities											|  
 | Max pooling	      	| 2x2 stride,  outputs 5x5x128 	|  
 | Flatten | the 3D shape (feature maps) into a flat vector |
-| Fully connected		| 120 neurons        									|  
+| Fully connected		| 1024 neurons        									|  
 | RELU					|	non linearities											|  
 | DROPOUT					|	50% drop during training											|  
 | Fully connected		| 84 neurons        									|  
@@ -152,7 +152,7 @@ I have used 50 epochs and a Batch Size of 128. With around 70.000 trainig sample
 
 I am using the Adam Optimizer with a Learning Rate of 1e-3. Compared to default SGD training with momentum, it reduces the number of hyperparameters to train and you do not have to manually tune the Learning Rate decay strategy. So it is easier and less time consuming to use with results that should be very good. 
 
-I implemented and tested L2 regularization but it did not help; most probably because the dropouts are already doing a good job in terms of regularization.  
+I am using L2 regularization as well to prevent overfitting.
 
 
 ####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
@@ -161,8 +161,8 @@ The code for calculating the accuracy of the model is located in the ninth cell 
 
 My final model results were:
 * training set accuracy of: 100%
-* validation set accuracy of: 99.1%
-* test set accuracy of: 97.4%
+* validation set accuracy of: 99%
+* test set accuracy of: 97.5%
 
   Actually while testing I got at some point Validation Accuracy 99.3% and Test Accuracy 97.8%. But what I am submitting here corresponds to the resuls summarized above.  
 
@@ -172,12 +172,14 @@ The validation accuracy was 89%.  So I managed to improve up to and above 99%.**
 **I have described my different iterations and trials in the previous sections but here is the summary of the key points leading to improvements compared to LeNet baseline:**
 * use different weights initializations: lower the sigma value.
 * use dropouts: for regularization
+* use L2 regularization
 * use more convolutional filters: for better discrimination capabilities. It improves translational invariance which is important when trying to detect an object in an image.
+* use more neurons in the fully connected layers
 * use per image mean var normalization. The per image being important here.
 * use some reduced and simple augmentation with geometric transformations (traing set size: 2x)
 * only qualify and store a model when the validation accuracy improves (it is related to early stop as well to prevent over fitting)
 
-So at the end, it is an improved LeNet architecture. So a relativelly small network. And I ended with pretty good results: Validation Accuracy above 99% and Test Accuracy above 97%.
+So at the end, it is an improved LeNet architecture. So a relativelly small network. And I ended with pretty good results: Validation Accuracy above 99% and Test Accuracy above 97.5%.
 
 Nevertheless to improve further I think 2 main things should be considered:
 - much more data augmentation: something like training set 20x. Also using color jittering on top of geometric transformations.
@@ -217,7 +219,7 @@ Here are the results of the prediction:
 | Speed limit (60km/h)				| Speed limit (60km/h)										|
 | General caution	      		| General caution				 				|
 | Priority Road			| Priority Road      							|
-| End of all speed and passing limits			| Speed limit (60km/h)     							|
+| End of all speed and passing limits			| Traffic signal     							|
 
 
 The model was able to correctly guess 5 of the 6 traffic signs, which gives an accuracy of 83.3% (with just 6 images)  
@@ -232,22 +234,22 @@ Now of course, the analysis of these 6 images is just illustrative: we would nee
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 
 
-For images 1,2,3 and 5, the softmax probability is close to 1: so the model has a very high confidence in these predictions.
-Which is good: even if the images are clean, it is good to notice that the confidence is so high.
-For image 4: the caution sign, it is a difficult one as the image is not cropped at all but nevertheless the softmax probability for this class is clearly the highest (close to 0.5) while the competing ones, ranking 2 and  3, are below 0.1.
+For images 1,2,3 and 5, the softmax probability is ... 1 ... : so the model has a very high confidence in these predictions.
+Which is good: even if the images are clean, it is good to notice that the confidence is so high. No doubt here.
+For image 4: the caution sign, it is a difficult one as the image is not cropped at all but nevertheless the softmax probability for this class is close to 1 as well.
 Note that while training without data augmentation (with geometric transformations), this image was not correctly predicted. So here we benefit from this training with additional transformed data.
-The image 6 is not recognised: the traffic sign elected is nevertheless a traffic sign that has some similarity in terms of shape.
+The image 6 is not recognised: but the model is clearly unsure. The softmax probability of the highest ranking is just below 1/3. While the correct class ranks 6th with just 0.14 probability. So even if we predict something we could provide the information that the prediction is not reliable !
 
 
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | 1.00         			| Right-of-way at the next intersection  									| 
-| 0.99     				| Stop 										|
+| 1.00     				| Stop 										|
 | 1.00					| Speed limit (60km/h)										|
-| 0.48      			| General caution					 				|
+| 0.97      			| General caution					 				|
 | 1.00				    | Priority Road     							|
-| 0.41			    | Speed limit (60km/h)      							|
+| 0.32			    | Traffic signal !!!      							|
 
 
 !<img src="./examples/prediction1.png" alt="alt text" width="400" height="300">
