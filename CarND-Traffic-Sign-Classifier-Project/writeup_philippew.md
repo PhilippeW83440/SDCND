@@ -17,7 +17,7 @@ The goals / steps of this project are the following:
 Training Set accuracy = 100%, Validation Set accuracy = 99%,   Test Set accuracy = 97.5%**
 
 **Update 26 March 2017:   
-Training Set accuracy = 100%, Validation Set accuracy = 99.3%, Test Set accuracy = 98.6%**
+Training Set accuracy = 100%, Validation Set accuracy = 99.7%, Test Set accuracy = 99.1%**
 code updated at:    
 https://github.com/PhilippeW83440/SDCND/blob/master/CarND-Traffic-Sign-Classifier-Project/Traffic_Sign_Classifier.ipynb  
 
