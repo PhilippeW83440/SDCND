@@ -1,5 +1,5 @@
 *.zip
-data/
+data*
 __MACOSX/
 linux_sim/
 run1/

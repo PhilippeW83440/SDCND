@@ -12,35 +12,45 @@ import numpy as np
 import sklearn
 
 
-lines = []
-with open('./data/driving_log.csv') as csvfile:
-    next(csvfile, None)
-    reader = csv.reader(csvfile)
-    for line in reader:
-        lines.append(line)
-
 images = []
 measurements = []
 
-for line in lines:
-    for i in range(3):
-        # Load images from center, left and right cameras
-        source_path = line[i]
-        tokens = source_path.split('/')
-        filename = tokens[-1]
-        local_path = "./data/IMG/" + filename
-        image = cv2.imread(local_path)
-        images.append(image)
+def load_data(directory, logfile):
+  lines = []
+  with open(directory+logfile) as csvfile:
+      next(csvfile, None)
+      reader = csv.reader(csvfile)
+      for line in reader:
+          lines.append(line)
+  
+  for line in lines:
+      measurement = float(line[3])
+      if measurement == 0 and np.random.uniform() <= 0.90:
+          continue
+      for i in range(3):
+          # Load images from center, left and right cameras
+          source_path = line[i]
+          tokens = source_path.split('/')
+          filename = tokens[-1]
+          local_path = directory + "IMG/" + filename
+          image = cv2.imread(local_path)
+          images.append(image)
+  
+      # Introduce steering correction
+      correction = 0.2
+      # Steering adjustment for center images
+      measurements.append(measurement)
+      # Add correction for steering for left images
+      measurements.append(measurement+correction)
+      # Minus correction for steering for right images
+      measurements.append(measurement-correction)
 
-    # Introduce steering correction
-    correction = 0.2
-    measurement = float(line[3])
-    # Steering adjustment for center images
-    measurements.append(measurement)
-    # Add correction for steering for left images
-    measurements.append(measurement+correction)
-    # Minus correction for steering for right images
-    measurements.append(measurement-correction)
+load_data('./data/', 'driving_log.csv')
+load_data('./datadrive/', 'driving_log.csv')
+load_data('./datarecovery/', 'driving_log.csv')
+
+print(len(measurements))
+#exit()
 
 augmented_images = []
 augmented_measurements = []
@@ -71,7 +81,7 @@ y_train = np.array(augmented_measurements)
 
 import keras
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda
+from keras.layers import Flatten, Dense, Lambda, Dropout
 from keras.layers.convolutional import Convolution2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
@@ -86,11 +96,12 @@ model.add(Convolution2D(64,3,3,activation='relu'))
 model.add(Convolution2D(64,3,3,activation='relu'))
 model.add(Flatten())
 model.add(Dense(100))
+model.add(Dropout(0.2))
 model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss='mse')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=10)
 
 model.save('model.h5')
