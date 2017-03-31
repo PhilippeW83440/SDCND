@@ -56,52 +56,24 @@ The model.py file contains the code for training and saving the convolution neur
 
 My model architecture corresponds to the Nvidia architecture described in the paper: End to End Learning for Self-Driving Cars  
 https://arxiv.org/pdf/1604.07316.pdf  
-____________________________________________________________________________________________________
-Layer (type)                     Output Shape          Param #     Connected to                     
-====================================================================================================
-lambda_1 (Lambda)                (None, 160, 320, 3)   0           lambda_input_1[0][0]             
-____________________________________________________________________________________________________
-cropping2d_1 (Cropping2D)        (None, 65, 320, 3)    0           lambda_1[0][0]                   
-____________________________________________________________________________________________________
-convolution2d_1 (Convolution2D)  (None, 31, 158, 24)   1824        cropping2d_1[0][0]               
-____________________________________________________________________________________________________
-convolution2d_2 (Convolution2D)  (None, 14, 77, 36)    21636       convolution2d_1[0][0]            
-____________________________________________________________________________________________________
-convolution2d_3 (Convolution2D)  (None, 5, 37, 48)     43248       convolution2d_2[0][0]            
-____________________________________________________________________________________________________
-convolution2d_4 (Convolution2D)  (None, 3, 35, 64)     27712       convolution2d_3[0][0]            
-____________________________________________________________________________________________________
-convolution2d_5 (Convolution2D)  (None, 1, 33, 64)     36928       convolution2d_4[0][0]            
-____________________________________________________________________________________________________
-flatten_1 (Flatten)              (None, 2112)          0           convolution2d_5[0][0]            
-____________________________________________________________________________________________________
-dense_1 (Dense)                  (None, 100)           211300      flatten_1[0][0]                  
-____________________________________________________________________________________________________
-dropout_1 (Dropout)              (None, 100)           0           dense_1[0][0]                    
-____________________________________________________________________________________________________
-dense_2 (Dense)                  (None, 50)            5050        dropout_1[0][0]                  
-____________________________________________________________________________________________________
-dense_3 (Dense)                  (None, 10)            510         dense_2[0][0]                    
-____________________________________________________________________________________________________
-dense_4 (Dense)                  (None, 1)             11          dense_3[0][0]                    
-====================================================================================================
+
 Total params: 348219
 
-Model based on Nvidia's end-to-end architecture:
-model = Sequential()
-model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
-model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))
-model.add(Convolution2D(24,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(36,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(48,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(64,3,3, activation='relu'))
-model.add(Convolution2D(64,3,3, activation='relu'))
-model.add(Flatten())
-model.add(Dense(100, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(50, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense( 1))
+Model based on Nvidia's end-to-end architecture: Total params: 348219  
+model = Sequential()  
+model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))  
+model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))  
+model.add(Convolution2D(24,5,5, subsample=(2,2), activation='relu'))  
+model.add(Convolution2D(36,5,5, subsample=(2,2), activation='relu'))  
+model.add(Convolution2D(48,5,5, subsample=(2,2), activation='relu'))  
+model.add(Convolution2D(64,3,3, activation='relu'))  
+model.add(Convolution2D(64,3,3, activation='relu'))  
+model.add(Flatten())  
+model.add(Dense(100, activation='relu'))  
+model.add(Dropout(0.2))  
+model.add(Dense(50, activation='relu'))  
+model.add(Dense(10, activation='relu'))  
+model.add(Dense( 1))  
 
 
 My model consists of a convolution neural network with hierarchical 5x5 and 3x3 filter sizes followed by fully connected layers. 
