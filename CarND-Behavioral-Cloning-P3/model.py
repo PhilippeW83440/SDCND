@@ -9,99 +9,133 @@ Created on Wed Mar 29 19:42:48 2017
 import csv
 import cv2
 import numpy as np
-import sklearn
+
+from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
+
+import matplotlib.pyplot as plt
+
+# np.random.seed(5)
+
+# Settings
+
+N_AUG = 6 # 1 imd => 6 imgs (center, left, right) * flip
+BATCH_SIZE = 32
+PATIENCE = 3
+NB_EPOCHS = 10
+ANGLE_CORRECTION = [0.0, 0.2, -0.2] # center, left, right
+CROP_TOP = 70
+CROP_BOTTOM = 25
 
 
-images = []
-measurements = []
-
-def load_data(directory, logfile):
-  lines = []
+def load_data(directory, logfile, samples):
   with open(directory+logfile) as csvfile:
-      next(csvfile, None)
+      next(csvfile, None) # ignore 1st line (headers)
       reader = csv.reader(csvfile)
       for line in reader:
-          lines.append(line)
-  
-  for line in lines:
-      measurement = float(line[3])
-      if measurement == 0 and np.random.uniform() <= 0.90:
-          continue
-      for i in range(3):
-          # Load images from center, left and right cameras
-          source_path = line[i]
-          tokens = source_path.split('/')
-          filename = tokens[-1]
-          local_path = directory + "IMG/" + filename
-          image = cv2.imread(local_path)
-          images.append(image)
-  
-      # Introduce steering correction
-      correction = 0.2
-      # Steering adjustment for center images
-      measurements.append(measurement)
-      # Add correction for steering for left images
-      measurements.append(measurement+correction)
-      # Minus correction for steering for right images
-      measurements.append(measurement-correction)
+          # Filter out 90% of 0 angles as they are overrepresented
+          angle = float(line[3])
+          if angle == 0 and np.random.uniform() <= 0.90:
+              continue
+          line.append(directory)
+          #print(line)
+          samples.append(line)
 
-load_data('./data/', 'driving_log.csv')
-load_data('./datadrive/', 'driving_log.csv')
-load_data('./datarecovery/', 'driving_log.csv')
+          
+# Use a generator to avoid any memory contraints when dealing with huge datasets          
+def generator(samples, batch_size=128):
+    num_samples = len(samples)
+    while 1: # Loop forever so the generator never terminates
+        shuffle(samples)
+        for offset in range(0, num_samples, batch_size):
+            batch_samples = samples[offset:offset+batch_size]            
+            
+            images = []
+            angles = []
+            for batch_sample in batch_samples:
+                # Deal with center, left, right cameras
+                filedir = batch_sample[-1]
+                for i in range(3):
+                    filename = batch_sample[i].strip()
+                    #print(filedir+filename)
+                    image = cv2.imread(filedir+filename)
+                    angle = float(batch_sample[3]) + ANGLE_CORRECTION[i]
+                    images.append(image) 
+                    angles.append(angle)
+                    
+                    # Data augmentation via flip
+                    flipped_image = cv2.flip(image, 1)
+                    images.append(flipped_image)
+                    angles.append(-angle)
+                    
+                    # Data augmentation via random brighteness
+                    #brightened_image = cv2.cvtColor(image,cv2.COLOR_RGB2HSV)
+                    #random_bright = .25+np.random.uniform()
+                    #brightened_image[:,:,2] = brightened_image[:,:,2]*random_bright
+                    #brightened_image = cv2.cvtColor(brightened_image,cv2.COLOR_HSV2RGB)
+            X_samples = np.array(images)
+            y_samples = np.array(angles)
+            yield shuffle(X_samples, y_samples)
 
-print(len(measurements))
-#exit()
+                     
+samples = []
+#load_data('./driving_data/data/', 'driving_log.csv', samples)
+load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)
+load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)
 
-augmented_images = []
-augmented_measurements = []
+train_samples, valid_samples = train_test_split(samples, test_size=0.2)
 
-# Augmented data set by adding 'flipped' images 
-# so model can learn from reversed images, 
-#as well as random brightness 
-#(with thanks to Vivek Yadav at http://bit.ly/2kOk6MU for the latter)
-for image, measurement in zip(images, measurements):
-    augmented_images.append(image)
-    augmented_measurements.append(measurement)
+train_generator = generator(train_samples, batch_size=BATCH_SIZE)
+valid_generator = generator(valid_samples, batch_size=BATCH_SIZE)
 
-    #brightened_image = cv2.cvtColor(image,cv2.COLOR_RGB2HSV)
-    #random_bright = .25+np.random.uniform()
-    #brightened_image[:,:,2] = brightened_image[:,:,2]*random_bright
-    #brightened_image = cv2.cvtColor(brightened_image,cv2.COLOR_HSV2RGB)
-    #flipped_image = cv2.flip(brightened_image, 1)
 
-    flipped_image = cv2.flip(image, 1)
-    flipped_measurement = measurement * -1.0
-    augmented_images.append(flipped_image)
-    augmented_measurements.append(flipped_measurement)
-
-# Pull the image and steering measurements 
-# into NumPy arrays we can use in the model
-X_train = np.array(augmented_images)
-y_train = np.array(augmented_measurements)
-
-import keras
 from keras.models import Sequential
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.layers import Flatten, Dense, Lambda, Dropout
 from keras.layers.convolutional import Convolution2D, Cropping2D
-from keras.layers.pooling import MaxPooling2D
+#from keras.layers.pooling import MaxPooling2D
 
 # Model based on Nvidia's end-to-end architecture
 model = Sequential()
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
-model.add(Cropping2D(cropping=((70,25),(1,1))))
-model.add(Convolution2D(24,5,5, subsample=(2,2),activation='relu'))
-model.add(Convolution2D(36,5,5,subsample=(2,2),activation='relu'))
-model.add(Convolution2D(48,5,5,subsample=(2,2),activation='relu'))
-model.add(Convolution2D(64,3,3,activation='relu'))
-model.add(Convolution2D(64,3,3,activation='relu'))
+model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))
+model.add(Convolution2D(24,5,5, subsample=(2,2), activation='relu'))
+model.add(Convolution2D(36,5,5, subsample=(2,2), activation='relu'))
+model.add(Convolution2D(48,5,5, subsample=(2,2), activation='relu'))
+model.add(Convolution2D(64,3,3, activation='relu'))
+model.add(Convolution2D(64,3,3, activation='relu'))
 model.add(Flatten())
-model.add(Dense(100))
+model.add(Dense(100, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(50))
-model.add(Dense(10))
-model.add(Dense(1))
+model.add(Dense(50, activation='relu'))
+model.add(Dense(10, activation='relu'))
+model.add(Dense( 1))
+#model.add(Dense( 1, activation='tanh')) # make sure final result is in between -1 and 1
 
 model.compile(optimizer='adam', loss='mse')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=10)
 
-model.save('model.h5')
+model.summary()
+
+filepath="model.{epoch:02d}-{val_loss:.3f}.h5"
+checkpoint = ModelCheckpoint(filepath, verbose=1)
+early_stopping = EarlyStopping(monitor='val_loss', patience=PATIENCE, verbose=1)
+
+history_object = model.fit_generator(train_generator, 
+                    samples_per_epoch = N_AUG * len(train_samples), 
+                    validation_data = valid_generator, 
+                    nb_val_samples = N_AUG * len(valid_samples), 
+                    nb_epoch = NB_EPOCHS,
+                    verbose = 1,
+                    callbacks = [checkpoint, early_stopping])
+
+#model.save('model.h5')
+
+### plot the training and validation loss for each epoch
+plt.plot(history_object.history['loss'])
+plt.plot(history_object.history['val_loss'])
+plt.title('model mean squared error loss')
+plt.ylabel('mean squared error loss')
+plt.xlabel('epoch')
+plt.legend(['training set', 'validation set'], loc='upper right')
+plt.show()
+plt.savefig('history.png')
