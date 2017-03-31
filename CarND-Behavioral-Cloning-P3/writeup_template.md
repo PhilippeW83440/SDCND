@@ -57,9 +57,7 @@ The model.py file contains the code for training and saving the convolution neur
 My model architecture corresponds to the Nvidia architecture described in the paper: End to End Learning for Self-Driving Cars  
 https://arxiv.org/pdf/1604.07316.pdf  
 
-Total params: 348219
-
-Model based on Nvidia's end-to-end architecture: Total params: 348219  
+Model based on Nvidia's end-to-end architecture:  
 model = Sequential()  
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))  
 model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))  
@@ -75,16 +73,21 @@ model.add(Dense(50, activation='relu'))
 model.add(Dense(10, activation='relu'))  
 model.add(Dense( 1))  
 
+The total number of parameters is: 348219. 
 
 My model consists of a convolution neural network with hierarchical 5x5 and 3x3 filter sizes followed by fully connected layers. 
 
 The model includes RELU layers to introduce nonlinearity  and the data is normalized in the model using a Keras lambda layer. 
 
+In the context of this project a smaller network would probably have been good enough but I wanted to experiment with a network architecture that is suitable for larger scale and more realistic environments as reported in the scientific publication by Nvidia. This architecture and pipeline should be the basis for further testing based on real camera inputs taken from a car.  
+
 ####2. Attempts to reduce overfitting in the model
 
 The model contains dropout layers in order to reduce overfitting. 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting. Moreover early stop is being used to prevent overfitting.  
+
+The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 ####3. Model parameter tuning
 
@@ -106,9 +109,7 @@ For details about how I created the training data, see the next section.
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+The overall strategy for deriving a model architecture was to follow the Nvidia paper: which is a reference on this topic.  
 
 In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set.  
 80% of the data was used for the training set and 20% for the valisation set.  
@@ -119,9 +120,9 @@ To combat the overfitting, I modified the model so that it used dropouts after t
 
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track. To improve the driving behavior in these cases, I added recovery recordings.
 
-At the end of the process, the vehicle is able to drive autonomously, at full speed 30 mph, around the track without leaving the road, endlessly on track1.
+At the end of the process, the vehicle is able to drive autonomously, at full speed 30 mph, around the track without leaving the road, endlessly, on track1.
 
-For track2, I stil need to record good training data.
+For track2, I still need to record good training data (I have some hard times trying to drive it manually)
 
 ####2. Final Model Architecture
 
