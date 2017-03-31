@@ -87,7 +87,7 @@ dense_4 (Dense)                  (None, 1)             11          dense_3[0][0]
 ====================================================================================================
 Total params: 348219
 
-# Model based on Nvidia's end-to-end architecture
+Model based on Nvidia's end-to-end architecture:
 model = Sequential()
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))
