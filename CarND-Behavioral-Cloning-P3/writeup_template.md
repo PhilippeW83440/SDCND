@@ -17,7 +17,8 @@ The goals / steps of this project are the following:
 
 
 [//]: # (Image References)  
-  
+
+[image0]: ./examples/simulator.png "Simulator" 
 [image1]: ./examples/center_sample.jpg "Center"  
 [image2]: ./examples/left_sample.jpg "Left"  
 [image3]: ./examples/right_sample.jpg "Right"  
@@ -48,6 +49,8 @@ Using the Udacity provided simulator and my drive.py file, the car can be driven
 ```sh
 python drive.py model.h5
 ```
+
+![alt text][image0]  
 
 ####3. Submission code is usable and readable
 
@@ -170,9 +173,11 @@ So we end up with 6ximages for 1 center camera image.
 - 90% of the images corresponding to 0 degree steering angle are discarded to ensure this class of angles is not over-represented during training.  
 - Top and bottom parts of the images are cropped: to make sure irrelevant parts for steering angle prediction, of the images are excluded.  
 - to prevent overfitting: dropout, validation set and early stop are being used.  
-- for scalability and to prevent memory issues: keras fit_generator is used  
+- for scalability and to prevent memory issues: keras fit_generator is used.   
 - for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used. 
-- for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this wil be handled by the GPU.    
+- for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this will be handled by the GPU.    
+- On track1, the model runs smoothly over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
+
 This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
 
