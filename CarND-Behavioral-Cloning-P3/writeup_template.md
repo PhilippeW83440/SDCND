@@ -184,6 +184,9 @@ So we end up with 6ximages for 1 center camera image.
 
 [video.mp4](https://youtu.be/OnGzhtT6NXU)  
 
+update 1st of April 2017:
+[track2_full.mp4](https://youtu.be/OjaRX_mtAJg)
+
 This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
 
