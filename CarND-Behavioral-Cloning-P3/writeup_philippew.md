@@ -51,7 +51,10 @@ load_data('./driving_data/track2_lap2/', 'driving_log.csv', samples)
 load_data('./driving_data/track2_lap3/', 'driving_log.csv', samples)  
 
 Training history:    
-[image11]: ./examples/history_for_generic_model.png "History" 
+![alt text][image12]  
+
+Training time:  
+Around 30 minutes with a GTX 980 TI  
 
 
 ###Files Submitted & Code Quality
