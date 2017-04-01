@@ -181,7 +181,7 @@ So we end up with 6ximages for 1 center camera image.
 - for scalability and to prevent memory issues: keras fit_generator is used.   
 - for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used. 
 - for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this will be handled by the GPU.    
-- On track1, the model runs smoothly over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
+- On track1, the model runs smoothly at 30 mph over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
 
 [video.mp4](https://youtu.be/OnGzhtT6NXU)  
 
