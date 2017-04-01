@@ -156,10 +156,6 @@ I then recorded the vehicle recovering from the left side and right sides of the
 Then I repeated this process on track two in order to get more data points.
 
 To augment the data sat, I also flipped images and angles thinking that this would helps the model to generalize.  
-For example, here is an image that has then been flipped:
-
-![alt text][image11]  
-![alt text][image12]  
 
 
 
@@ -175,7 +171,8 @@ So we end up with 6ximages for 1 center camera image.
 - Top and bottom parts of the images are cropped: to make sure irrelevant parts for steering angle prediction, of the images are excluded.  
 - to prevent overfitting: dropout, validation set and early stop are being used.  
 - for scalability and to prevent memory issues: keras fit_generator is used  
-- for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used.  
+- for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used. 
+- for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this wil be handled by the GPU.    
 This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
 
