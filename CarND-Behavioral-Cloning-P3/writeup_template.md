@@ -183,6 +183,8 @@ So we end up with 6ximages for 1 center camera image.
 - for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this will be handled by the GPU.    
 - On track1, the model runs smoothly over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
 
+[video.mp4](https://youtu.be/OnGzhtT6NXU)  
+
 This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
 
