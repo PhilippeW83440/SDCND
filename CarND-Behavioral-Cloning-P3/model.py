@@ -81,8 +81,12 @@ def generator(samples, batch_size=128):
                      
 samples = []
 #load_data('./driving_data/data/', 'driving_log.csv', samples)
-load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)
-load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)
+#load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)
+#load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)
+
+load_data('./driving_data/track2_lap1/', 'driving_log.csv', samples)
+load_data('./driving_data/track2_lap2/', 'driving_log.csv', samples)
+load_data('./driving_data/track2_lap3/', 'driving_log.csv', samples)
 
 train_samples, valid_samples = train_test_split(samples, test_size=0.2)
 
