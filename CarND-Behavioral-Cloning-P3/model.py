@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 N_AUG = 6 # 1 image => 6 images (center, left, right) * flip
 BATCH_SIZE = 32
 PATIENCE = 3
-NB_EPOCHS = 10
+NB_EPOCHS = 20
 ANGLE_CORRECTION = [0.0, 0.2, -0.2] # center, left, right
 CROP_TOP = 70
 CROP_BOTTOM = 25
@@ -59,6 +59,7 @@ def generator(samples, batch_size=128):
                     filename = batch_sample[i].strip()
                     #print(filedir+filename)
                     image = cv2.imread(filedir+filename)
+                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # TEST PWE
                     angle = float(batch_sample[3]) + ANGLE_CORRECTION[i]
                     images.append(image) 
                     angles.append(angle)
@@ -93,22 +94,23 @@ from keras.models import Sequential
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.layers import Flatten, Dense, Lambda, Dropout
 from keras.layers.convolutional import Convolution2D, Cropping2D
+from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU, SReLU
 #from keras.layers.pooling import MaxPooling2D
 
 # Model based on Nvidia's end-to-end architecture
 model = Sequential()
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((CROP_TOP, CROP_BOTTOM), (0,0))))
-model.add(Convolution2D(24,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(36,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(48,5,5, subsample=(2,2), activation='relu'))
-model.add(Convolution2D(64,3,3, activation='relu'))
-model.add(Convolution2D(64,3,3, activation='relu'))
+model.add(Convolution2D(24,5,5, subsample=(2,2), activation='elu'))
+model.add(Convolution2D(36,5,5, subsample=(2,2), activation='elu'))
+model.add(Convolution2D(48,5,5, subsample=(2,2), activation='elu'))
+model.add(Convolution2D(64,3,3, activation='elu'))
+model.add(Convolution2D(64,3,3, activation='elu'))
 model.add(Flatten())
-model.add(Dense(100, activation='relu'))
+model.add(Dense(100, activation='elu'))
 model.add(Dropout(0.5))
-model.add(Dense(50, activation='relu'))
-model.add(Dense(10, activation='relu'))
+model.add(Dense(50, activation='elu'))
+model.add(Dense(10, activation='elu'))
 model.add(Dense( 1))
 #model.add(Dense( 1, activation='tanh')) # make sure final result is in between -1 and 1
 
@@ -117,7 +119,7 @@ model.compile(optimizer='adam', loss='mse')
 model.summary()
 
 
-filepath="model.epoch{epoch:02d}-valloss{val_loss:.3f}.h5"
+filepath="model.epoch{epoch:02d}-valloss{val_loss:.4f}.h5"
 checkpoint = ModelCheckpoint(filepath, verbose=1)
 early_stopping = EarlyStopping(monitor='val_loss', patience=PATIENCE, verbose=1)
 

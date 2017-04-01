@@ -22,9 +22,14 @@ model = None
 prev_image_array = None
 
 
+# 1st April 2017: 
+# Back to initial Udacity version (I changed my locale to en_US.UTF-8)
+
+# 27th March 2017:
 # THIS FILE HAS BEEN MODIFIED BY ME SO THAT IT WORKS WITH FRENCH LOCALE !!!!!
 # cf all the replace(",", ".") and replace(".", ",")
 # compared to Udacity version
+
 
 
 class SimplePIController:
@@ -49,7 +54,7 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 9
+#set_speed = 9
 set_speed = 30
 controller.set_desired(set_speed)
 
@@ -59,18 +64,12 @@ def telemetry(sid, data):
     if data:
         # The current steering angle of the car
         steering_angle = data["steering_angle"]
-        steering_angle = steering_angle.replace(",", ".")
-        steering_angle = float(steering_angle )
 
         # The current throttle of the car
         throttle = data["throttle"]
-        throttle = throttle.replace(",", ".")
-        throttle = float(throttle )
 
         # The current speed of the car
         speed = data["speed"]
-        speed = speed.replace(",", ".")
-        speed = float(speed )
 
         # The current image from the center camera of the car
         imgString = data["image"]
@@ -105,8 +104,8 @@ def send_control(steering_angle, throttle):
     sio.emit(
         "steer",
         data={
-            'steering_angle': steering_angle.__str__().replace(".",","),
-            'throttle': throttle.__str__().replace(".",",")
+            'steering_angle': steering_angle.__str__(),
+            'throttle': throttle.__str__()
         },
         skip_sid=True)
 

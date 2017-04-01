@@ -4,3 +4,5 @@ driving_data/
 __MACOSX/
 linux_sim/
 run1/
+backup/
+model.epoch*
