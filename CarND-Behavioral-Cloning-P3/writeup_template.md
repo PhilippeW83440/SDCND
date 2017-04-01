@@ -137,7 +137,8 @@ The final model architecture corresponds to  Nvidia End to End Learning for Self
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:  
+To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of: 
++ center lane driving:   
 ![alt text][image1]  
 + associated left camera:  
 ![alt text][image2]
@@ -166,6 +167,15 @@ After the collection process, I had 7874 images corresponding to a "normal track
 
 I  randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 4 as evidenced by the histoty plot:   
+To summarize:
+- Left and right cameras are used to improve recovery: angle +/- 0.2 are used for left/right cameras images vs center camera (idealy this should be derived based on trigonometry and cinematics of the vehicle)  
+- all images are being flipped: and -angle is being used for the flipped image  
+So we end up with 6ximages for 1 center camera image.  
+- 90% of the images corresponding to 0 degree steering angle are discarded to ensure this class of angles is not over-represented during training.  
+- Top and bottom parts of the images are cropped: to make sure irrelevant parts for steering angle prediction, of the images are excluded.  
+- to prevent overfitting: dropout, validation set and early stop are being used.  
+- for scalability and to prevent memory issues: keras fit_generator is used  
+- for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used.  
+This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
-I used an adam optimizer so that manually training the learning rate wasn't necessary.  
+
