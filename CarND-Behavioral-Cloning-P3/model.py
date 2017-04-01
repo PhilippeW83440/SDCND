@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 N_AUG = 6 # 1 image => 6 images (center, left, right) * flip
 BATCH_SIZE = 32
 PATIENCE = 3
-NB_EPOCHS = 20
+NB_EPOCHS = 40
 ANGLE_CORRECTION = [0.0, 0.2, -0.2] # center, left, right
 CROP_TOP = 70
 CROP_BOTTOM = 25
@@ -81,8 +81,8 @@ def generator(samples, batch_size=128):
                      
 samples = []
 #load_data('./driving_data/data/', 'driving_log.csv', samples)
-#load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)
-#load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)
+load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)
+load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)
 
 load_data('./driving_data/track2_lap1/', 'driving_log.csv', samples)
 load_data('./driving_data/track2_lap2/', 'driving_log.csv', samples)

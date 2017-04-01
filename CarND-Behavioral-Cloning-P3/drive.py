@@ -54,9 +54,9 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 9
-set_speed = 30
-set_speed = 15
+set_speed = 9 # Udacity default
+set_speed = 30 # OK for track1
+set_speed = 15 # OK for track1 and track2
 controller.set_desired(set_speed)
 
 
