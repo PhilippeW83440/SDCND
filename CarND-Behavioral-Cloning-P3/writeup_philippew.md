@@ -1,3 +1,4 @@
+
 #**Behavioral Cloning** 
 
 ##Writeup Template
@@ -30,11 +31,29 @@ The goals / steps of this project are the following:
 [image9]: ./examples/original.jpg "Original Image"  
 [image10]: ./examples/cropped.jpg "Cropped Image"  
 [image11]: ./examples/history.png "History"  
+[image12]: ./examples/history_for_generic_model.png "History"   
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
+
+**update 1st of April 2017:**  
+same model now working on both tracks  
+track1: [video.mp4](https://youtu.be/OnGzhtT6NXU)  
+track2: [track2_full.mp4](https://youtu.be/OjaRX_mtAJg)  
+
+Training data:  
+load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)  
+load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)  
+load_data('./driving_data/track2_lap1/', 'driving_log.csv', samples)  
+load_data('./driving_data/track2_lap2/', 'driving_log.csv', samples)  
+load_data('./driving_data/track2_lap3/', 'driving_log.csv', samples)  
+
+Training history:    
+[image11]: ./examples/history_for_generic_model.png "History" 
+
+
 ###Files Submitted & Code Quality
 
 ####1. Submission includes all required files and can be used to run the simulator in autonomous mode
