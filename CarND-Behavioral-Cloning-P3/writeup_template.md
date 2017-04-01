@@ -29,6 +29,7 @@ The goals / steps of this project are the following:
 [image8]: ./examples/recov5.jpg "Recovery Image"  
 [image9]: ./examples/original.jpg "Original Image"  
 [image10]: ./examples/cropped.jpg "Cropped Image"  
+[image11]: ./examples/history.png "History"  
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -74,7 +75,7 @@ model.add(Convolution2D(64,3,3, activation='relu'))
 model.add(Convolution2D(64,3,3, activation='relu'))  
 model.add(Flatten())  
 model.add(Dense(100, activation='relu'))  
-model.add(Dropout(0.2))  
+model.add(Dropout(0.5))  
 model.add(Dense(50, activation='relu'))  
 model.add(Dense(10, activation='relu'))  
 model.add(Dense( 1))  
@@ -94,7 +95,11 @@ To overcome potential memory issues when dealing with big data sets, Keras fit_g
 
 The model contains dropout layers in order to reduce overfitting. 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting. Moreover early stop is being used to prevent overfitting.  
+The model was trained and validated on different data sets to ensure that the model was not overfitting. Moreover early stop is being used to prevent overfitting. 
+
+![alt text][image11]  
+
+Model produced at epoch 7 is elected based on lowest validation loss.  
 
 The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
@@ -156,7 +161,6 @@ I then recorded the vehicle recovering from the left side and right sides of the
 ![alt text][image7]  
 ![alt text][image8]  
 
-Then I repeated this process on track two in order to get more data points.
 
 To augment the data sat, I also flipped images and angles thinking that this would helps the model to generalize.  
 
@@ -176,7 +180,9 @@ So we end up with 6ximages for 1 center camera image.
 - for scalability and to prevent memory issues: keras fit_generator is used.   
 - for scalability and to prepare more real life scenarios, a powerfull Nvidia's end-to-end architecture is used. 
 - for efficiency: normalization and cropping are performed as part of the Keras Neural Network model. So this will be handled by the GPU.    
-- On track1, the model runs smoothly over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
+- On track1, the model runs smoothly at 30 mph over and over without driving outside the road. I also tried that while making some small manual modifications, going left or right, when coming back to the autonomous mode, the car recovers and come back to the center of the road.    
+
+[video.mp4](https://youtu.be/OnGzhtT6NXU)  
 
 This pipeline could now be used in a context similar to Udacity open source challenge 2 with real car camera images.  
 
