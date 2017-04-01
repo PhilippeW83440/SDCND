@@ -18,13 +18,16 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./examples/center_sample.png "Center"
+[image2]: ./examples/left_sample.png "Left"
+[image3]: ./examples/right_sample.png "Right"
+[image4]: ./examples/recovery1.png "Recovery Image"
+[image5]: ./examples/recovery2.png "Recovery Image"
+[image6]: ./examples/recovery3.png "Recovery Image"
+[image7]: ./examples/recovery4.png "Recovery Image"
+[image8]: ./examples/recovery5.png "Recovery Image"
+[image9]: ./examples/original.png "Original Image"
+[image10]: ./examples/cropped.png "Cropped Image"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
