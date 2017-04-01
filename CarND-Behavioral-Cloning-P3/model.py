@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 # Settings
 
-N_AUG = 6 # 1 imd => 6 imgs (center, left, right) * flip
+N_AUG = 6 # 1 image => 6 images (center, left, right) * flip
 BATCH_SIZE = 32
 PATIENCE = 3
 NB_EPOCHS = 10
@@ -106,7 +106,7 @@ model.add(Convolution2D(64,3,3, activation='relu'))
 model.add(Convolution2D(64,3,3, activation='relu'))
 model.add(Flatten())
 model.add(Dense(100, activation='relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
 model.add(Dense(50, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense( 1))
@@ -116,7 +116,8 @@ model.compile(optimizer='adam', loss='mse')
 
 model.summary()
 
-filepath="model.{epoch:02d}-{val_loss:.3f}.h5"
+
+filepath="model.epoch{epoch:02d}-valloss{val_loss:.3f}.h5"
 checkpoint = ModelCheckpoint(filepath, verbose=1)
 early_stopping = EarlyStopping(monitor='val_loss', patience=PATIENCE, verbose=1)
 
@@ -137,5 +138,5 @@ plt.title('model mean squared error loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
-plt.show()
 plt.savefig('history.png')
+plt.show()
