@@ -29,6 +29,7 @@ The goals / steps of this project are the following:
 [image8]: ./examples/recov5.jpg "Recovery Image"  
 [image9]: ./examples/original.jpg "Original Image"  
 [image10]: ./examples/cropped.jpg "Cropped Image"  
+[image11]: ./examples/history.png "History"  
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -94,7 +95,11 @@ To overcome potential memory issues when dealing with big data sets, Keras fit_g
 
 The model contains dropout layers in order to reduce overfitting. 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting. Moreover early stop is being used to prevent overfitting.  
+The model was trained and validated on different data sets to ensure that the model was not overfitting. Moreover early stop is being used to prevent overfitting. 
+
+![alt text][image11]  
+
+Model produced at epoch 7 is elected based on lowest validation loss.  
 
 The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
