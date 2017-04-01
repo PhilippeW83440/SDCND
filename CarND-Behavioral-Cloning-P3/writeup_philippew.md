@@ -32,6 +32,7 @@ The goals / steps of this project are the following:
 [image10]: ./examples/cropped.jpg "Cropped Image"  
 [image11]: ./examples/history.png "History"  
 [image12]: ./examples/history_for_generic_model.png "History"   
+[image13]: ./examples/sim_image.png "Track 2"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -56,6 +57,8 @@ Training history:
 Training time:  
 Around 30 minutes with a GTX 980 TI  
 
+Track2: the jungle track   
+![alt text][image13] 
 
 ###Files Submitted & Code Quality
 
