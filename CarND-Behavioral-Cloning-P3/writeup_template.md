@@ -80,9 +80,12 @@ The total number of parameters is: 348219.
 
 My model consists of a convolution neural network with hierarchical 5x5 and 3x3 filter sizes followed by fully connected layers. 
 
-The model includes RELU layers to introduce nonlinearity  and the data is normalized in the model using a Keras lambda layer. 
+The model includes RELU layers to introduce nonlinearity  and the data is normalized in the model using a Keras lambda layer.
+Additionaly cropping is integrated into the neural network so that this operation is performed on GPU: which is faster.    
 
-In the context of this project a smaller network would probably have been good enough but I wanted to experiment with a network architecture that is suitable for larger scale and more realistic environments as reported in the scientific publication by Nvidia. This architecture and pipeline should be the basis for further testing based on real camera inputs taken from a car.  
+In the context of this project a smaller network would probably have been good enough but I wanted to experiment with a network architecture that is suitable for larger scale and more realistic environments as reported in the scientific publication by Nvidia. This architecture and pipeline should be the basis for further testing based on real camera inputs taken from a car. 
+
+To overcome potential memory issues when dealing with big data sets, Keras fit_generator is used.
 
 ####2. Attempts to reduce overfitting in the model
 
@@ -125,41 +128,42 @@ The final step was to run the simulator to see how well the car was driving arou
 
 At the end of the process, the vehicle is able to drive autonomously, at full speed 30 mph, around the track without leaving the road, endlessly, on track1.
 
-For track2, I still need to record good training data (I have some hard times trying to drive it manually)
+For track2, I still need to record good training data (I have some hard times trying to drive it manually).  
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture corresponds to  Nvidia End to End Learning for Self-Driving Cars + dropouts.
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving + associated left and right camera:
 
+![alt text][image1]
 ![alt text][image2]
+![alt text][image3]
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
 
-![alt text][image3]
 ![alt text][image4]
 ![alt text][image5]
+![alt text][image6]
+![alt text][image7]
+![alt text][image8]
 
 Then I repeated this process on track two in order to get more data points.
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+To augment the data sat, I also flipped images and angles thinking that this would helps the model to generalize.  
+For example, here is an image that has then been flipped:
 
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+![alt text][image11]
+![alt text][image12]
 
 
-I finally randomly shuffled the data set and put 20% of the data into a validation set. 
+
+After the collection process, I had 7874 images corresponding to a "normal track" + 1458 images corresponding to "recovery operatios". 
+
+I  randomly shuffled the data set and put 20% of the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 4 as evidenced by the histoty plot:   
 
