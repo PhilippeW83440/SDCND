@@ -44,7 +44,8 @@ same model now working on both tracks
 track1: [video.mp4](https://youtu.be/OnGzhtT6NXU)  
 track2: [track2_full.mp4](https://youtu.be/OjaRX_mtAJg)  
 
-Training data:  
+Training data: 
+https://drive.google.com/open?id=0B37jfLdgL8i7SG84Z09LWk53MTQ  
 load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)  
 load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)  
 load_data('./driving_data/track2_lap1/', 'driving_log.csv', samples)  
