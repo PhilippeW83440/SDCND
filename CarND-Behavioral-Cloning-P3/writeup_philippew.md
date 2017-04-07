@@ -32,6 +32,7 @@ The goals / steps of this project are the following:
 [image10]: ./examples/cropped.jpg "Cropped Image"  
 [image11]: ./examples/history.png "History"  
 [image12]: ./examples/history_for_generic_model.png "History"   
+[image13]: ./examples/sim_image.png "Track 2"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -43,7 +44,8 @@ same model now working on both tracks
 track1: [video.mp4](https://youtu.be/OnGzhtT6NXU)  
 track2: [track2_full.mp4](https://youtu.be/OjaRX_mtAJg)  
 
-Training data:  
+Training data: 
+https://drive.google.com/open?id=0B37jfLdgL8i7SG84Z09LWk53MTQ  
 load_data('./driving_data/track1_drive/', 'driving_log.csv', samples)  
 load_data('./driving_data/track1_recovery/', 'driving_log.csv', samples)  
 load_data('./driving_data/track2_lap1/', 'driving_log.csv', samples)  
@@ -56,6 +58,8 @@ Training history:
 Training time:  
 Around 30 minutes with a GTX 980 TI  
 
+Track2: the jungle track   
+![alt text][image13] 
 
 ###Files Submitted & Code Quality
 
