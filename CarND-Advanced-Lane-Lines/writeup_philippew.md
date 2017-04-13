@@ -178,7 +178,11 @@ I verified that my perspective transform was working as expected by drawing the 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
 ![alt text][image18]
-![alt text][image20]
+
+<p align="center">
+     <img src="./writeup_images/histogram_per_window.jpg" alt="histogram_example" width="40%" height="40%">
+     <br>histogram_per_window.jpg
+</p>
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
