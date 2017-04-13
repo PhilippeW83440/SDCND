@@ -103,6 +103,26 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
 ![alt text][image12]
+
+```python
+def select_white_yellow(img):
+    """Applies color selection for white and yellow"""
+    hls_img = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+    
+    # white color mask
+    lower = np.array([  0, 200,   0], dtype="uint8")
+    upper = np.array([255, 255, 255], dtype="uint8")
+    white_mask = cv2.inRange(hls_img, lower, upper)
+    
+    # yellow color mask
+    lower = np.array([ 10,   0, 100], dtype="uint8")
+    upper = np.array([ 40, 255, 255], dtype="uint8")
+    yellow_mask = cv2.inRange(hls_img, lower, upper)
+    # combine the mask
+    
+    white_yellow_mask = cv2.bitwise_or(white_mask, yellow_mask)
+    return cv2.bitwise_and(img, img, mask = white_yellow_mask)
+```
 ![alt text][image13]
 ![alt text][image14]
 
@@ -110,7 +130,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
-```
+```python
 class Transformer():
     def __init__(self, img):
         (h, w) = (img.shape[0], img.shape[1]) # 720, 1280
@@ -157,8 +177,74 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 I did this in lines # through # in my code in `my_other_file.py`
 
 ![alt text][image22]
+
+```python
+    # Calculate the lane line curvature
+    def find_curvature(self):
+        yscale = 30 / 720 # meters per pixel in y dimension
+        xscale = 3.7 / 700 # meters per pixel in x dimension
+
+        # Convert polynomial to set of points for refitting
+        ploty = np.linspace(0, self.h - 1, self.h)
+        
+        l_poly = self.last_l_poly
+        plotx = l_poly[0] * ploty ** 2 + l_poly[1] * ploty + l_poly[2]
+        # Fit new polynomial
+        poly_cur = np.polyfit(ploty * yscale, plotx * xscale, 2)
+        # Calculate curve radius
+        l_curv = ((1 + (2 * poly_cur[0] * np.max(ploty) * yscale + poly_cur[1]) ** 2) ** 1.5) / np.absolute(2 * poly_cur[0])
+        
+        r_poly = self.last_r_poly.copy()
+        plotx = r_poly[0] * ploty ** 2 + r_poly[1] * ploty + r_poly[2]
+        # Fit new polynomial
+        poly_cur = np.polyfit(ploty * yscale, plotx * xscale, 2)
+        # Calculate curve radius
+        r_curv = ((1 + (2 * poly_cur[0] * np.max(ploty) * yscale + poly_cur[1]) ** 2) ** 1.5) / np.absolute(2 * poly_cur[0])
+          
+        # Calculate the lane curvature radius
+        curv = (l_curv + r_curv) / 2.0
+        
+        # Update polynomials using weighted average with last frame
+        if self.last_curv is None:
+            # If first frame, initialise poly
+            self.last_curv = curv
+        else:
+            # Otherwise, update poly with low pass filtering
+            curv = 0.8 * self.last_curv + 0.2 * curv
+            self.last_curv = curv
+        
+        return curv
+```
+
 ![alt text][image23]
 ![alt text][image24]
+
+```python
+    # Find the offset of the car and the base of the lane lines
+    def find_offset(self):
+        l_poly = self.last_l_poly
+        r_poly = self.last_r_poly
+        
+        lane_width = 3.7  # metres
+        h = self.h  # height of image (index of image bottom)
+        w = self.w  # width of image
+
+        # Find the bottom pixel of the lane lines
+        l_px = l_poly[0] * h ** 2 + l_poly[1] * h + l_poly[2]
+        r_px = r_poly[0] * h ** 2 + r_poly[1] * h + r_poly[2]
+
+        # Find the midpoint
+        midpoint = (l_px + r_px) / 2.0
+
+        # Find the offset from the centre of the frame, and then multiply by scale
+        offset = (w/2 - midpoint) 
+        
+        # Find the number of pixels per real metre
+        scale = lane_width / np.abs(l_px - r_px)
+        offset *= scale
+        
+        return offset
+```
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
