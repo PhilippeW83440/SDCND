@@ -62,22 +62,6 @@ The goals / steps of this project are the following:
 
 ![alt text][image9]
 
-```python
-def process_image(img):    
-    img = undistort(img, mtx, dist)
-    # Keep the untransformed image for later
-    orig = img.copy()
-    img = select_white_yellow(img)
-    img = grayscale(img)        
-    img = transform.warp(img)
-    out_img = tracker.find_lines(img, debug = True)
-    curvature = tracker.find_curvature()   
-    result = tracker.plot_poly_orig(orig)
-    cv2.putText(final, 'Curvature: {}m'.format(int(curvature)), (10, 50), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
-    offset = tracker.find_offset()
-    cv2.putText(final, 'Lane Offset: {}m'.format(round(offset, 4)), (10, 100), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
-    return result
-```
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
@@ -95,6 +79,24 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ![alt text][image10]
 
 ###Pipeline (single images)
+
+
+```python
+def process_image(img):    
+    img = undistort(img, mtx, dist)
+    # Keep the untransformed image for later
+    orig = img.copy()
+    img = select_white_yellow(img)
+    img = grayscale(img)        
+    img = transform.warp(img)
+    out_img = tracker.find_lines(img, debug = True)
+    curvature = tracker.find_curvature()   
+    result = tracker.plot_poly_orig(orig)
+    cv2.putText(final, 'Curvature: {}m'.format(int(curvature)), (10, 50), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
+    offset = tracker.find_offset()
+    cv2.putText(final, 'Lane Offset: {}m'.format(round(offset, 4)), (10, 100), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
+    return result
+```
 
 ####1. Provide an example of a distortion-corrected image.
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
