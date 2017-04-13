@@ -184,7 +184,11 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 
 I did this in lines # through # in my code in `my_other_file.py`
 
-![alt text][image22]
+<p align="center">
+     <img src="./writeup_images/curvature1.jpg" alt="curvature_example" width="40%" height="40%">
+     <br>curvature1.jpg
+</p>
+
 
 ```python
     # Calculate the lane line curvature
@@ -224,8 +228,15 @@ I did this in lines # through # in my code in `my_other_file.py`
         return curv
 ```
 
-![alt text][image23]
-![alt text][image24]
+<p align="center">
+     <img src="./writeup_images/curvature2.png" alt="curvature_example" width="40%" height="40%">
+     <br>curvature2.png
+</p>
+
+<p align="center">
+     <img src="./writeup_images/curvature3.png" alt="curvature_example" width="40%" height="40%">
+     <br>curvature3.png
+</p>
 
 ```python
     # Find the offset of the car and the base of the lane lines
