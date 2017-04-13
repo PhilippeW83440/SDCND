@@ -62,6 +62,23 @@ The goals / steps of this project are the following:
 
 ![alt text][image9]
 
+```python
+def process_image(img):    
+    img = undistort(img, mtx, dist)
+    # Keep the untransformed image for later
+    orig = img.copy()
+    img = select_white_yellow(img)
+    img = grayscale(img)        
+    img = transform.warp(img)
+    out_img = tracker.find_lines(img, debug = True)
+    curvature = tracker.find_curvature()   
+    result = tracker.plot_poly_orig(orig)
+    cv2.putText(final, 'Curvature: {}m'.format(int(curvature)), (10, 50), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
+    offset = tracker.find_offset()
+    cv2.putText(final, 'Lane Offset: {}m'.format(round(offset, 4)), (10, 100), cv2.FONT_HERSHEY_DUPLEX, 1.5, (255,255,255))
+    return result
+```
+
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
 You're reading it!
@@ -94,18 +111,25 @@ I used a combination of color and gradient thresholds to generate a binary image
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 ```
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-
+class Transformer():
+    def __init__(self, img):
+        (h, w) = (img.shape[0], img.shape[1]) # 720, 1280
+        src = np.float32([[w // 2 - 76, h * .625], [w // 2 + 76, h * .625], [-100, h], [w + 100, h]])
+        dst = np.float32([[100, 0], [w - 100, 0], [100, h], [w - 100, h]])    
+        
+        #src = np.array([[585, 460], [203, 720], [1127, 720], [695, 460]]).astype(np.float32)
+        #dst = np.array([[320, 0], [320, 720], [960, 720], [960, 0]]).astype(np.float32)
+        
+        self.M = cv2.getPerspectiveTransform(src, dst)
+        self.Minv = cv2.getPerspectiveTransform(dst, src)
+        
+    def warp(self, img):
+        return cv2.warpPerspective(img, self.M, (img.shape[1], img.shape[0]))
+    
+    def unwarp(self, img):
+        return cv2.warpPerspective(img, self.Minv, (img.shape[1], img.shape[0]))
 ```
+
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
@@ -142,6 +166,36 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ![alt text][image9]
 
+```python
+    # Plot the polygons on the image
+    def plot_poly_orig(self, orig):
+        fitl = self.last_l_poly
+        fitr = self.last_r_poly
+        if fitl == None or fitr == None:
+            return orig
+        # Draw lines from polynomials
+        ploty = np.linspace(0, orig.shape[0]-1, orig.shape[0])
+        fitl = fitl[0]*ploty**2 + fitl[1]*ploty + fitl[2]
+        fitr = fitr[0]*ploty**2 + fitr[1]*ploty + fitr[2]
+
+        pts_left = np.array([np.transpose(np.vstack([fitl, ploty]))])
+        pts_right = np.array([np.flipud(np.transpose(np.vstack([fitr, ploty])))])
+        pts = np.hstack((pts_left, pts_right))
+
+        # Create an overlay from the lane lines
+        overlay = np.zeros_like(orig).astype(np.uint8)
+        cv2.fillPoly(overlay, np.int_([pts]), (0,255, 0))
+
+        # Apply inverse transform to the overlay to plot it on the original road
+        overlay = transform.unwarp(overlay)
+
+        # Add the overlay to the original unwarped image
+        result = cv2.addWeighted(orig, 1, overlay, 0.3, 0)
+        
+        s_img = cv2.resize(self.debug_img, (300, 300))
+        result[0:300, -1-300:-1] = s_img
+        return result
+```
 ---
 
 ###Pipeline (video)
