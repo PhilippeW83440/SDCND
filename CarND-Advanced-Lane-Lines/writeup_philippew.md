@@ -180,7 +180,7 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 ![alt text][image18]
 
 <p align="center">
-     <img src="./writeup_images/histogram_per_window.jpg" alt="histogram_example" width="40%" height="40%">
+     <img src="./writeup_images/histogram_per_window.jpg" alt="histogram_example" width="30%" height="30%">
      <br>histogram_per_window.jpg
 </p>
 
@@ -233,12 +233,12 @@ I did this in lines # through # in my code in `my_other_file.py`
 ```
 
 <p align="center">
-     <img src="./writeup_images/curvature2.png" alt="curvature_example" width="40%" height="40%">
+     <img src="./writeup_images/curvature2.png" alt="curvature_example" width="30%" height="30%">
      <br>curvature2.png
 </p>
 
 <p align="center">
-     <img src="./writeup_images/curvature3.png" alt="curvature_example" width="40%" height="40%">
+     <img src="./writeup_images/curvature3.png" alt="curvature_example" width="30%" height="30%">
      <br>curvature3.png
 </p>
 
