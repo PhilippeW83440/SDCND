@@ -26,13 +26,15 @@ The goals / steps of this project are the following:
 [image6]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
+
+
 [image9]: ./writeup_images/test4_result.png "Test4 Result"
 
 [image10]: ./writeup_images/chessboard.png "Chessboard"
 [image11]: ./writeup_images/camera_calibration.png "Calibration"
 
 [image12]: ./writeup_images/hsv_hls.png "hsv hls"
-[image13]: ./writeup_images/test4_white_yelow.png "Test4 White yellow selection"
+[image13]: ./writeup_images/test4_white_yellow.png "Test4 White yellow selection"
 [image14]: ./writeup_images/test4_binary.png "Test4 Binary"
 
 [image15]: ./writeup_images/test4_warp.png "Test4 Warp"
@@ -58,6 +60,8 @@ The goals / steps of this project are the following:
 ---
 ###Writeup / README
 
+![alt text][image9]
+
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
 You're reading it!
@@ -71,7 +75,8 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![alt text][image1]
+![alt text][image10]
+![alt text][image11]
 
 ###Pipeline (single images)
 
@@ -81,7 +86,9 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
-![alt text][image3]
+![alt text][image12]
+![alt text][image13]
+![alt text][image14]
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -111,23 +118,31 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+![alt text][image15]
+![alt text][image16]
+![alt text][image17]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
+![alt text][image18]
+![alt text][image19]
+![alt text][image20]
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 I did this in lines # through # in my code in `my_other_file.py`
 
+![alt text][image22]
+![alt text][image23]
+![alt text][image24]
+
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![alt text][image9]
 
 ---
 
@@ -135,7 +150,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](https://www.youtube.com/watch?v=dNlqlQh5f-4)
 
 ---
 
