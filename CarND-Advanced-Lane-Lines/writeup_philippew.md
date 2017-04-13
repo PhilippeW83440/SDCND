@@ -51,8 +51,11 @@ The goals / steps of this project are the following:
 [image23]: ./writeup_images/curvature2.png "Curvature1"
 [image24]: ./writeup_images/curvature3.png "Curvature3"
 
+[image25]: ./writeup_images/project_video_sample1.gif "Video sample"
+
 
 [video10]: ./project_video_out1.mp4 "Video"
+
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -60,7 +63,7 @@ The goals / steps of this project are the following:
 ---
 ###Writeup / README
 
-![alt text][image9]
+![alt text][image25]
 
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
