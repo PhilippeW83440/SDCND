@@ -52,6 +52,7 @@ The goals / steps of this project are the following:
 [image24]: ./writeup_images/curvature3.png "Curvature3"
 
 [image25]: ./writeup_images/project_video_sample1.gif "Video sample"
+[image26]: ./writeup_images/test4_undistort.png "Undistort"
 
 
 [video10]: ./project_video_out1.mp4 "Video"
@@ -76,13 +77,15 @@ You're reading it!
 
 ####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the first code cell of the IPython notebook located in "./P4.ipynb".  
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
+![alt text][image10]
+
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![alt text][image10]
+![alt text][image11]
 
 ###Pipeline (single images)
 
@@ -106,9 +109,24 @@ def process_image(img):
 
 ####1. Provide an example of a distortion-corrected image.
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image11]
+![alt text][image26]
+
+Although here with road images it is more difficult to spot the effect of undistortion compared to a chessboard picture, we can see on the right and left sides of the picture that the images are different.
+
+
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I experimented a combination of color and gradient thresholds to generate a binary image (thresholding steps in IPython notebook located in "./P4.ipynb").  Here's an example of my output for this step.  (note: this is actually from one of the test images)
+
+Going from RGB colorspace to HSV or HLS colorspace helps dealing with poor lighting conditions.   
+White and Yellow pixels are extracted in HLS space: cf https://en.wikipedia.org/wiki/HSL_and_HSV  
+White is identified with high L (Light) values: above 200.  
+Yellow is identified with a H (Hue) value in between 10 and 40 and a S (Saturation) value above 100.  
+
+I experimented with gradients in various ways, but for the project video the best results I got were obtained with just HLS white and yellow colorspace selection. Nevertheless for the harder challenge videos, making use of gradients would be more important.  
+
+#### Note that this stage is crucial: everything part of the lane lines missed here, may be a killer for the later on processing.
+#### So as a general rule, it is less problematic to detect a bit more than just the lane lines than it is to miss some parts of the lane lines.
+
 
 <p align="center">
      <img src="./writeup_images/hsv_hls.png" alt="hsv_hls_example" width="50%" height="50%">
@@ -138,9 +156,11 @@ def select_white_yellow(img):
 ![alt text][image13]
 ![alt text][image14]
 
+Finally a binary image is created, that will be the basis for further processing.
+
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform is reproduced below: a class has been created and the perspective transforms are computed at the beginning (at class initialization). Then for every image of the video, warp and unwarp functions can be called without re-deriving the perspective transform estimation.
 
 ```python
 class Transformer():
@@ -179,7 +199,13 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The identification of the lane lines is done in 2 stages:
+- statistics are derived, per sub window, so we know where most of the points are detected and concentrated. A per subwindow histogram is computed so we can estimate where the middle of the lane lines is most probably located. Also using a margin of + or - 100 pixels around the sub window mean, enables to remove outliers that could be detrimental to the next best fit estimation step.    
+- a 2nd order polynomial is estimated as a best fit for the per sub window elected points. The np.polyfit function is used for this purpose.  
+
+Images are provided below so it becomes easier to understand the different steps.  
+
+This is the approach that was suggested in the lectures. Another approach would be using RANSAC algorithm to estimate a 2nd or 3rd order polynomial. This alternative approach could be usefull for the harder challenge video: more noisy due to much more varying lightning conditions and more curvy as well.  
 
 ![alt text][image18]
 
@@ -190,7 +216,8 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+The code for computing the curvature is reproduced below.  
+More details related to the underlying geometry and calculus can be found here: http://www.intmath.com/applications-differentiation/8-radius-curvature.php   
 
 <p align="center">
      <img src="./writeup_images/curvature1.jpg" alt="curvature_example" width="40%" height="40%">
@@ -241,10 +268,15 @@ I did this in lines # through # in my code in `my_other_file.py`
      <br>curvature2.png
 </p>
 
+Here is an image from Google maps of where the project video was made (just northwest of the Udacity office!). Here, Udacity has drawn a circle to coincide with the first left curve in the project video. This is a very rough estimate, but as you can see, the radius of that circle is approximately 1 km. If you're reporting 10 km or 0.1 km, you know there might be something wrong with your calculations! Typical values for the project video should be in between 500 m and 1500 m.  
+
+
 <p align="center">
      <img src="./writeup_images/curvature3.png" alt="curvature_example" width="30%" height="30%">
      <br>curvature3.png
 </p>
+
+The camera is mounted at the center of the car, such that the lane center is the midpoint at the bottom of the image between the two lines we have detected. The offset of the lane center from the center of the image (converted from pixels to meters) is the distance from the center of the lane.   
 
 ```python
     # Find the offset of the car and the base of the lane lines
@@ -275,7 +307,8 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+The code is reproduced below.  
+I also added a debug window on the top right of the picture which was very convenient for debugging, tuning and better understanding of what is going on.  
 
 ![alt text][image9]
 
@@ -323,5 +356,24 @@ Here's a [link to my video result](https://www.youtube.com/watch?v=dNlqlQh5f-4)
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further. 
+
+
+To summarize:
+- a full pipeline for advanced lane lines detection has been implemented (camera calibration, undistortion, color and gradients thresholding, warping image to retrieve a bird's eyes view, 2nd order polynomial best fit, curvature and vehicle offset from the center of the lanes have been derived)
+- a very useful debug window has been overlayed to enable easier analysis of what is working well or not
+- to get stable results:
+    - a 1st order low pass filtering is applied on all the estimations (polynomial, curvature, offset) 
+    - outliers rejection has been used
+    - also basic per image sanity check has been implemented: so that for images where the detection failed or is too uncertain (e.g. less than 1000 points available) we do not change current coefficients values and overlay a display based on previous images estimations.  
+- this pipeline performs well on the project video.  
+ 
+ Nevertheless, much more work is left to do, especially to deal with the harder challenge videos.
+ The following points should be considered:
+ - not just search blindly for the lane lines in each frame of video, but rather, once you have a high-confidence detection, use that to inform the search for the position of the lines in subsequent frames of video. For example, if a polynomial fit was found to be robust in the previous frame, then rather than search the entire next frame for the lines, just a window around the previous detection could be searched. This will improve speed and provide a more robust method for rejecting outliers.
+ - to better deal with varying lightning conditions, improved gradients thresholding should be used. A good idea suggested by another SDC student (Paul Balanca) is:  as lanes are constituted of two parallel edges (usually spaced by around 30 pixels) whose gradients are of opposite signs, this simple fact can be used to filter out numerous false positives, and only keep edges which verify this very specific property.
+- to better deal with outliers rejection, a RANSAC algorithm could be used during the best fit estimation stage (I already had that idea in mind for P1 project, but have not experimented with it so far). The drawback may be the additional computational complexity.
+- it is important to know when this computer vision block is not able to detect lane lines reliably so a warning can be sent or displayed or so that the control can be handed over to another block (could be a localization or Deep Learning behavioral cloning block).
+
+From now on, I will probably first focus on completing P5 but I would like to come back later to this project to work on the harder challenge videos and improve the pipeline further.  
 
