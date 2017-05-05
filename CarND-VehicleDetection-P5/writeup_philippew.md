@@ -45,13 +45,11 @@ clip1 = VideoFileClip("project_video.mp4")
 test_clip = clip1.fl_image(process_image)
 %time test_clip.write_videofile(output, audio=False)
 
-[MoviePy] >>>> Building video project_video_out1.mp4
-[MoviePy] Writing video project_video_out1.mp4
-
-100%|█████████▉| 1270/1271 [00:53<00:00, 23.63it/s]
-
-[MoviePy] Done.
-[MoviePy] >>>> Video ready: project_video_out1.mp4 
+#[MoviePy] >>>> Building video project_video_out1.mp4
+#[MoviePy] Writing video project_video_out1.mp4
+#100%|█████████▉| 1270/1271 [00:53<00:00, 23.63it/s]
+#[MoviePy] Done.
+#[MoviePy] >>>> Video ready: project_video_out1.mp4 
 ```
 
 Here's a [link to my video result](https://www.youtube.com/watch?v=9iieJO-0upU)
