@@ -37,6 +37,23 @@ The goals / steps of this project are the following:
 
 ![alt text][image9]
 
+
+```python
+heatmaps.clear()
+output = 'project_video_out1.mp4'
+clip1 = VideoFileClip("project_video.mp4")
+test_clip = clip1.fl_image(process_image)
+%time test_clip.write_videofile(output, audio=False)
+
+[MoviePy] >>>> Building video project_video_out1.mp4
+[MoviePy] Writing video project_video_out1.mp4
+
+100%|█████████▉| 1270/1271 [00:53<00:00, 23.63it/s]
+
+[MoviePy] Done.
+[MoviePy] >>>> Video ready: project_video_out1.mp4 
+```
+
 Here's a [link to my video result](https://www.youtube.com/watch?v=9iieJO-0upU)
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
@@ -62,12 +79,114 @@ I tried various combinations of parameters and...
 
 I trained a fully convolutional Neural Network using...
 
+```python
+def convnet(input_shape=(64,64,3), filename=None):
+    model = Sequential()
+    model.add(Lambda(lambda x: x/127.5 - 1.,input_shape=input_shape, output_shape=input_shape))
+    model.add(Convolution2D(48, 3, 3, activation='relu', name='conv1',input_shape=input_shape, border_mode="same"))
+    model.add(Convolution2D(48, 3, 3, activation='relu', name='conv2',border_mode="same"))
+    model.add(MaxPooling2D(pool_size=(8,8)))
+    model.add(Dropout(0.25))
+    model.add(Convolution2D(128,8,8,activation="relu",name="dense1")) # This was Dense(128)
+    model.add(Dropout(0.5))
+    model.add(Convolution2D(1,1,1,name="dense2", activation="tanh")) # This was Dense(1)
+    if filename:
+        model.load_weights(filename)        
+    return model
+
+model = convnet()
+model.add(Flatten()) # (None, 1, 1, 1) -> (None, 1)
+model.summary()
+```
+
+Total params: 415601
+
+91.95 Seconds to train the model...  
+Test score: 0.00289260983378  
+Test accuracy: 0.996621621622  
+
 ![alt text][image2]
 ![alt text][image3]
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+
+```python
+HOTMAP_THRES = 0.999 #0.99
+MH = 64
+MW = 64
+CROP_YMIN = 400
+CROP_YMAX = 660
+N_FRAMES_FILTER = 3 # 3
+
+SCALE0 = 0.5
+SCALE1 = 1.2 # 1.2
+SCALE2 = 2 #1.8
+
+heatmodel = convnet(input_shape=(None, None, 3), filename="convnet.h5")
+
+import collections
+heatmaps = collections.deque(maxlen=N_FRAMES_FILTER)
+
+from scipy.ndimage.measurements import label
+
+def process_image(img):
+    orig_img = img.copy()
+    # We crop the image to 400-660px in the vertical direction from 720x1280
+    #crop_img = orig_img[CROP_YMIN:CROP_YMAX, :] # TODO MAKE THAT DYNAMIC based on img.shape
+    
+    boxes_front = []
+    
+    crop_img = orig_img[400:550, 0:400]
+    dimx = int(crop_img.shape[0]/SCALE0)
+    dimy = int(crop_img.shape[1]/SCALE0)
+    resized_img = cv2.resize(crop_img, (dimy, dimx), interpolation=cv2.INTER_AREA)
+    hotmap0 = heatmodel.predict(resized_img.reshape(1, resized_img.shape[0], resized_img.shape[1], resized_img.shape[2]))
+    find_boxes_front(hotmap0, boxes_front, scale=SCALE0, crop_ymin=400)
+    
+    for (mx,my,mw,mh) in boxes_front:
+        cv2.rectangle(orig_img, (mx, my), (mx+mw, my+mh), (255,0,0), 5)
+    
+    boxes = []
+    
+    crop_img = orig_img[CROP_YMIN:550, 150::]
+    dimx = int(crop_img.shape[0]/SCALE1)
+    dimy = int(crop_img.shape[1]/SCALE1)
+    resized_img = cv2.resize(crop_img, (dimy, dimx), interpolation=cv2.INTER_AREA)
+    hotmap1 = heatmodel.predict(resized_img.reshape(1, resized_img.shape[0], resized_img.shape[1], resized_img.shape[2]))
+    find_boxes(hotmap1, boxes, scale=SCALE1, crop_ymin=CROP_YMIN, crop_xmin=150)
+    
+    crop_img = orig_img[500:CROP_YMAX, 150::]
+    dimx = int(crop_img.shape[0]/SCALE2)
+    dimy = int(crop_img.shape[1]/SCALE2)
+    resized_img = cv2.resize(crop_img, (dimy, dimx), interpolation=cv2.INTER_AREA)
+    hotmap2 = heatmodel.predict(resized_img.reshape(1, resized_img.shape[0], resized_img.shape[1], resized_img.shape[2]))
+    find_boxes(hotmap2, boxes, scale=SCALE2, crop_ymin=500, crop_xmin=150)  
+    
+    #for (mx,my,mw,mh) in boxes:
+    #    cv2.rectangle(orig_img, (mx, my), (mx+mw, my+mh), (0,0,255), 5)
+    #return orig_img
+
+    heat = np.zeros_like(orig_img[:,:,0]).astype(np.float)
+    
+    # Add heat to each box in box list
+    heat = add_heat(heat, boxes)
+    heatmaps.append(heat)
+    heatmaps_sum = sum(heatmaps)
+    
+    # Apply threshold to help remove false positives
+    heatmaps_sum = apply_threshold(heatmaps_sum, N_FRAMES_FILTER*2) #*3
+
+    # Visualize the heatmap when displaying    
+    heatmap = np.clip(heatmaps_sum, 0, 255)
+
+    # Find final boxes from heatmap using label function
+    labels = label(heatmap)
+    draw_img = draw_labeled_bboxes(orig_img, labels)
+    
+    return draw_img
+```
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
