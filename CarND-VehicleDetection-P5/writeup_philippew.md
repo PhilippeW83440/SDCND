@@ -56,26 +56,47 @@ Here's a [link to my video result](https://www.youtube.com/watch?v=9iieJO-0upU)
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
-You're reading it!
+
+The approach I have chosen is a Deep Learning approach that is not relying on existing DL object detection frameworks (no Yolo, no SSD, no SqueezeDet re-use here).  
+The implementation is fully self-contained here, done in python and Keras and actually maches pretty well with the pure Computer Vision steps expected in the below rubric.  
+
+The steps used are the following:  
+- A 64x64 image car classifier is built and trained on the GTI/KITTI data provided. **This classifier is a fully convolutional neural network**    
+- Then this 64x64 car classifier is used as the building block of a sliding window and **multi scales** detector applied on 720x1280 images  
+- Heatmaps, thresholding and filtering over a few consecutive frames are used **to remove false positive detections** and track vehicles over consecutive frames  
+
+The implementation is fast: around 25 fps (on my PC: iCore7 + GPU GTX 890 TI). So much faster than a typical HOG+SVM CV approach while enabling to detect vehicules in both directions and is comparable to existing DL detection frameworks in terms of speed and ability to detect vehicles at different scales.  
+
+In terms of write up, I am following the proposed rubric points template. Even if it was initially targetted for the HOG+SVM CV approach, appart for some specific details, eg the use of HOG features, in terms of steps and project breakdowns and implmentation there is a 1-1 correspondance between the HOG+SVM CV approach and the Deep Learning CNN detection approach presented here.  
 
 ###Histogram of Oriented Gradients (HOG)
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the first code cells of the IPython notebook.    
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]
+![alt text][image1]  
+
+Now this is one of the interest of DL approaches, you do not have to hand design specific features. It usualy can deal with raw pixels. So the input here is a standard RGB image/pixels. Apart from mean-var normalization no specific pre-processing or features extraction is performed.  
 
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+Raw RGB pixels are being used as input. Mean-var normalization is integrated in the fully convolutionnal classifier: so it will be handled on the GPU as well.  
+So the features extraction step is fast and minimalist.  
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a fully convolutional Neural Network using...
+I trained a fully convolutional Neural Network using Keras framework.  
+The keyword here is **fully** convolutional Neural Network. Traditionnaly DL classifiers are made up of several convolutional layers folowed by a few dense layers. Here the dense layers are replaced by convolutionnal layers as mentionned in the paper referred in (1) in the credits: Fully convolutionnal networks for Semantic Segmentation, https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf. 
+
+This approach is typically used as the basis of segmentation, to build heatmaps, and indeed this what we are going to do. But instead of performing segmentation we will use the heatmap built by this fully convolutionnal network, to detect objects, on the heat areas.  
+
+So the classifier is a simple CNN network with the 2 final dense layers replaced by 1x1 convolutional filters where we used to have dense connections.  
+
+The nice property of a convolutional filter or a fully convolutional neural network (built initialy for classifying 64x64 images) is that it will naturally slide over bigger images (720x1280 in our case) to create outputs that are no more 1 dimension (car not car for a 64x64 image) but a feature map or heatmap that will tell us for every 64x64 possible positions within the 720x1280 image what the car probability will be for a specific location.  
 
 ```python
 def convnet(input_shape=(64,64,3), filename=None):
@@ -102,6 +123,9 @@ Total params: 415601
 91.95 Seconds to train the model...  
 Test score: 0.00289260983378  
 Test accuracy: 0.996621621622  
+
+The amount of parameters here is relatively low for a Neural Network classifier. The training is fast and the accuracy on the validation set is 99.6%.  
+90% of the provided data has been used for the training set and 10% has been used as a validation set.  
 
 ![alt text][image2]
 ![alt text][image3]
