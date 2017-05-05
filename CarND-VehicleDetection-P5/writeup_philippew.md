@@ -293,7 +293,7 @@ Here's an example result showing the heatmap from a series of frames of video, t
 ![alt text][image7]
 ![alt text][image8]  
 
-Not that I have used different settings:
+Note that I have used different settings:
 - for cars driving in the same direction than our car: 3 consecutive frames are being used and their heatmaps sumed. Then a threshold of 3*3 overlaps is used to identify areas where we will drow a bounding box.
 - for cars driving in the opposite direction than our car: the relative speed is much higher so no consecutive frames are being used. Otherwise we would filter most of these detections.  
 
