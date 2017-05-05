@@ -143,7 +143,17 @@ The amount of parameters here is relatively low for a Neural Network classifier.
 Two techniques are being used here:  
 -  the fully convolutionnal neural network 64x64 classifier will naturally slide over an image that is much bigger than 64x64 to produce a feature map (or heatmap) ouput. As represented below.
 
+
+By sliding with our 64x64 classifier over (720, 1280, 3) images we get an output that is (83, 153, 1); mainly dividing size by 8 as we are using an 8x8 pooling and the filters have been defined so the borders reamain the same (before pooling). So we get a 2D ouput where the (x,y) pixel value corresponds to a number between -1 and 1. The closer the pixel value to 1, the highest the probability that there is a car located within the m-rectangle (mx=8*x, my=8*y, mw=64, mh=64) in the original input image.  
+
+This m-rectangle is 1 of the candidate bounding box for object detection.  There will be many of them, most of the time overlapping. We will perform a grouping of these overlapping bounding boxes to extract 1 bounding box per object detected.  
+
+
+
 ![alt text][image4]  
+
+A thresholding is applied to get a binary output.  
+
 ![alt text][image5]  
 
 - 3 different scales are being handled here (0.5, 1.2 and 2)
