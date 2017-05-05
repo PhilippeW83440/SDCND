@@ -202,8 +202,7 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./writeup/p5_video_out1.mp4)
-
+Here's a [link to my video result](https://www.youtube.com/watch?v=9iieJO-0upU)
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
@@ -228,3 +227,10 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
+**Credits:**  
+(1) Fully convolutionnal networks for Semantic Segmentation:     
+    https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf  
+(2) heatmaps with convnets:   
+    from a French startup Heuritech https://github.com/heuritech/convnets-keras   
+(3) heatmaps with convnets:  
+    from a fellow Udacity SDCND student https://medium.com/@tuennermann/   
