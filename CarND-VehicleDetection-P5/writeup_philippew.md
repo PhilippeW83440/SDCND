@@ -110,6 +110,12 @@ Test accuracy: 0.996621621622
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
+I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+
+![alt text][image4]  
+![alt text][image5]  
+
+
 ```python
 HOTMAP_THRES = 0.999 #0.99
 MH = 64
@@ -186,10 +192,7 @@ def process_image(img):
     return draw_img
 ```
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
-![alt text][image4]
-![alt text][image5]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
