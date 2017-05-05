@@ -16,7 +16,7 @@ The goals / steps of this project are the following:
 
 
 [//]: # (Image References)
-[image1]: ./writeup/car_not_car.png
+[image1]: ./writeup/car_notcar.png
 [image2]: ./writeup/convnet_acc.png
 [image3]: ./writeup/convnet_loss.png
 [image4]: ./writeup/convnet_hotmap.png
@@ -68,18 +68,23 @@ The steps used are the following:
 The implementation is fast: around 25 fps (on my PC: iCore7 + GPU GTX 890 TI). So much faster than a typical HOG+SVM CV approach while enabling to detect vehicules in both directions and is comparable to existing DL detection frameworks in terms of speed and ability to detect vehicles at different scales.  
 
 In terms of write up, I am following the proposed rubric points template. Even if it was initially targetted for the HOG+SVM CV approach, appart for some specific details, eg the use of HOG features, in terms of steps and project breakdowns and implmentation there is a 1-1 correspondance between the HOG+SVM CV approach and the Deep Learning CNN detection approach presented here.  
+  
 
 ###Histogram of Oriented Gradients (HOG)
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cells of the IPython notebook.    
+
+
+Now this is one of the interest of DL approaches, you do not have to hand design specific features. It usualy can deal with raw pixels. So the input here is a standard RGB image/pixels. Apart from mean-var normalization no specific pre-processing or features extraction is performed.  
+
+
+The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]  
+![alt text][image1]
 
-Now this is one of the interest of DL approaches, you do not have to hand design specific features. It usualy can deal with raw pixels. So the input here is a standard RGB image/pixels. Apart from mean-var normalization no specific pre-processing or features extraction is performed.  
 
 
 ####2. Explain how you settled on your final choice of HOG parameters.
@@ -90,12 +95,13 @@ So the features extraction step is fast and minimalist.
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained a fully convolutional Neural Network using Keras framework.  
+  
 The keyword here is **fully** convolutional Neural Network. Traditionnaly DL classifiers are made up of several convolutional layers folowed by a few dense layers. Here the dense layers are replaced by convolutionnal layers as mentionned in the paper referred in (1) in the credits: Fully convolutionnal networks for Semantic Segmentation, https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf. 
 
 This approach is typically used as the basis of segmentation, to build heatmaps, and indeed this what we are going to do. But instead of performing segmentation we will use the heatmap built by this fully convolutionnal network, to detect objects, on the heat areas.  
-
+  
 So the classifier is a simple CNN network with the 2 final dense layers replaced by 1x1 convolutional filters where we used to have dense connections.  
-
+  
 The nice property of a convolutional filter or a fully convolutional neural network (built initialy for classifying 64x64 images) is that it will naturally slide over bigger images (720x1280 in our case) to create outputs that are no more 1 dimension (car not car for a 64x64 image) but a feature map or heatmap that will tell us for every 64x64 possible positions within the 720x1280 image what the car probability will be for a specific location.  
 
 ```python
@@ -134,11 +140,25 @@ The amount of parameters here is relatively low for a Neural Network classifier.
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+Two techniques are being used here:  
+-  the fully convolutionnal neural network 64x64 classifier will naturally slide over an image that is much bigger than 64x64 to produce a feature map (or heatmap) ouput. As represented below.
 
 ![alt text][image4]  
 ![alt text][image5]  
 
+- 3 different scales are being handled here (0.5, 1.2 and 2)
+
+First of all the image is split or cropped into 4 different areas:
+- upper part: corresponding to sky and trees mainly, is excluded from the search window.
+- the area from 400:550 y-corrdinates: is searched at a scale of 0.5.   
+- the are from 450:550 y-coordinates: is searched at a scale of 1.2.  
+- the area from 500:660 y-coordinates: is searched at a scale of 2.   
+
+The rationale is that cars at the bottom of the image will appear bigger than the ones at upper parts.  
+It will also help the detection to run faster by not sliding over the full image for every possible scales.  
+
+Note that to search at a scale of eg 2, we resize the original image by making it 2 times smaller and then run the 64x64 classifier over it.  
+Similarly to search at a scale of eg 0.5, we resize the original image by making it 2 times bigger and then run the 64x64 classifier over it.  
 
 ```python
 HOTMAP_THRES = 0.999 #0.99
