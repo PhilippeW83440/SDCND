@@ -65,7 +65,7 @@ The steps used are the following:
 - Then this 64x64 car classifier is used as the building block of a sliding window and **multi scales** detector applied on 720x1280 images  
 - Heatmaps, thresholding and filtering over a few consecutive frames are used **to remove false positive detections** and track vehicles over consecutive frames  
 
-The implementation is fast: around 25 fps (on my PC: iCore7 + GPU GTX 890 TI). So much faster than a typical HOG+SVM CV approach while enabling to detect vehicules in both directions and is comparable to existing DL detection frameworks in terms of speed and ability to detect vehicles at different scales.  
+The implementation is fast: around 25 fps (on my PC: iCore7 + GPU GTX 980 TI). So much faster than a typical HOG+SVM CV approach while enabling to detect vehicules in both directions and is comparable to existing DL detection frameworks in terms of speed and ability to detect vehicles at different scales.  
 
 In terms of write up, I am following the proposed rubric points template. Even if it was initially targetted for the HOG+SVM CV approach, appart for some specific details, eg the use of HOG features, in terms of steps and project breakdowns and implmentation there is a 1-1 correspondance between the HOG+SVM CV approach and the Deep Learning CNN detection approach presented here.  
   
@@ -76,7 +76,7 @@ In terms of write up, I am following the proposed rubric points template. Even i
 
 
 
-Now this is one of the interest of DL approaches, you do not have to hand design specific features. It usualy can deal with raw pixels. So the input here is a standard RGB image/pixels. Apart from mean-var normalization no specific pre-processing or features extraction is performed.  
+This is one of the interest of DL approaches, you do not have to hand-design specific features. You can usually deal with raw pixels. The Neural Network has the ability to learn a good representation of the raw input pixels. So the input here is a standard RGB image/pixels. Apart from mean-var normalization no specific pre-processing or features extraction is performed.  
 
 
 The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
@@ -309,6 +309,18 @@ Different colors are used:
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
+First of all I highly recommend reading the 3 links provided below in the credits. These are the roots of this implementation.  
+
+Here I have used a Deep Learning approach but it has many things in common with the traditional HOG+SVM CV approach.  
+The key step here, using fully convolutional networks to build heatmaps, is usually applied in a context of Images segmentation. Here it has been used to derive object detections. I am pretty happy with the result both in terms of accuracy (for vehichles driving in both directions, even if the training data was provided for cars seen only from behind !!!) and in terms of speed: around 25 fps.   
+I have also re-used many things from the Udacity Computer Vision lectures to handle the grouping of candidate bounding boxes and filtering of false positives.  
+I probably could improve the stability of the drawing of the bounding boxes from frame to frame by using a 1st order low pass filter (something like y[n]=0.8*y[n-1]+0.2*x[n] for the bounding boxes coordinates)  
+
+In terms of next steps and improvements I really would like to study in details the SquezzeDet framework and architecture: 
+https://arxiv.org/abs/1612.01051   
+**Unified, Small, Low Power Fully Convolutional Neural Networks for Real-Time Object Detection for Autonomous Driving.**
+
 
 **Credits:**  
 (1) Fully convolutionnal networks for Semantic Segmentation:     
