@@ -146,7 +146,7 @@ Two techniques are being used here:
 
 By sliding with our 64x64 classifier over (720, 1280, 3) images we get an output that is (83, 153, 1); mainly dividing size by 8 as we are using an 8x8 pooling and the filters have been defined so the borders reamain the same (before pooling). So we get a 2D ouput where the (x,y) pixel value corresponds to a number between -1 and 1. The closer the pixel value to 1, the highest the probability that there is a car located within the m-rectangle (mx=8*x, my=8*y, mw=64, mh=64) in the original input image.  
 
-This m-rectangle is 1 of the candidate bounding box for object detection.  There will be many of them, most of the time overlapping. We will perform a grouping of these overlapping bounding boxes to extract 1 bounding box per object detected.  
+**This m-rectangle is 1 of the candidate bounding box for object detection.  There will be many of them, most of the time overlapping. We will perform a grouping of these overlapping bounding boxes to extract 1 bounding box per detected object.**  
 
 
 
@@ -169,6 +169,17 @@ It will also help the detection to run faster by not sliding over the full image
 
 Note that to search at a scale of eg 2, we resize the original image by making it 2 times smaller and then run the 64x64 classifier over it.  
 Similarly to search at a scale of eg 0.5, we resize the original image by making it 2 times bigger and then run the 64x64 classifier over it.  
+
+The image processing pipeline is the following:
+- SCALE0 0.5 search on 400:550 y-coordinates area.
+- SCALE1 1.2 search on 400:550 y-coordinates area
+- SCALE2 2.0 search on 500:660 y-coordinates.
+
+Candidate bounding boxes are captured:
+- boxes_front: for cars driving in the opposite direction typically
+- boxes: for cars driving in the same direction than our car
+
+Then as explained in the lectures, overlapping boxes are grouped together and overlayed over the detected object.  
 
 ```python
 HOTMAP_THRES = 0.999 #0.99
@@ -250,10 +261,19 @@ def process_image(img):
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+ Here are some example images:
 
 ![alt text][image8]
 ![alt text][image9]
+
+To otimize the accuracy of the classifier I used:
+- DL CNN classifier  
+- 3 different scales (0.5, 1.2 and 2)  
+
+To optimize the speed of the classifier I used:
+- DL CNN classifier leveraging on GPU capabilities  
+- cropping image for different limited searches. Upper parts of the image look for smaller cars, and bottom parts of the image look for bigger cars basically.    
+  
 ---
 
 ### Video Implementation
